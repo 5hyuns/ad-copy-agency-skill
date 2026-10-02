@@ -2,11 +2,17 @@
 # 사용: python build_pool.py <round1|feedback|round2|candidates> <실행 폴더>
 #       python build_pool.py known <실행 폴더> <팀>   (앞 팀들의 루트 평문 → 05-known-<팀>.md)
 import re, sys, random, pathlib
-from runfiles import TEAMS, read, write, section, table, load_json, save_json, md_row
+from runfiles import TEAMS, read, write, section, table, load_json, save_json, md_row, lang
 
 sys.stdout.reconfigure(encoding="utf-8")
 cmd, run = sys.argv[1], pathlib.Path(sys.argv[2])
 rnd = random.Random(f"{run.name}-{cmd}")
+LANG = lang(run)
+
+
+def M(ko, en):
+    """다음 역할이 읽는 파일의 문구. 실행의 카피 언어를 따른다."""
+    return en if LANG == "en" else ko
 
 
 def team_round1(t):
@@ -25,9 +31,9 @@ def round1():
     rnd.shuffle(routes)
     rid = {(t, k): f"R{i:02d}" for i, (t, k, _) in enumerate(routes, 1)}
     key = {"routes": {rid[(t, k)]: {"team": t, "route": k, "plain": v} for t, k, v in routes}, "lines": {}}
-    out = ["# CD 1차 리뷰용 — 팀 이름을 가렸다", "", "## 루트", "", md_row("루트", "평문 한 줄"), "|---|---|"]
+    out = [M("# CD 1차 리뷰용 — 팀 이름을 가렸다", "# For CD review, round 1 — team names hidden"), "", M("## 루트", "## Routes"), "", md_row(M("루트", "Route"), M("평문 한 줄", "Plain line")), "|---|---|"]
     out += [md_row(rid[(t, k)], v) for t, k, v in routes]
-    out += ["", "## 줄", "", md_row("줄", "루트", "헤드라인"), "|---|---|---|"]
+    out += ["", M("## 줄", "## Lines"), "", md_row(M("줄", "Line"), M("루트", "Route"), M("헤드라인", "Headline")), "|---|---|---|"]
     n = 0
     missing_route = []
     for t, k, _ in routes:
@@ -53,7 +59,7 @@ def cd1():
     # 살린 루트 밖의 줄을 CD가 '살림'으로 둔 경우(루트 상한을 줄 때 나왔다) 죽임으로 본다.
     for l, (v, why) in list(verdict.items()):
         if v == "살림" and key["lines"][l]["rid"] not in kept_routes:
-            verdict[l] = ("죽임", "루트가 살아남지 않음")
+            verdict[l] = ("죽임", M("루트가 살아남지 않음", "route not kept"))
     return key, kept_routes, verdict
 
 
@@ -61,11 +67,11 @@ def local_ids(text, key, t):
     """CD가 쓴 가림 번호(L001, R01)를 팀이 아는 번호로 바꾼다. 다른 팀의 것은 가린 채로 둔다."""
     def line(m):
         v = key["lines"].get(m.group(0))
-        return m.group(0) if not v else (v["no"] if v["team"] == t else "다른 팀의 줄")
+        return m.group(0) if not v else (v["no"] if v["team"] == t else M("다른 팀의 줄", "another team's line"))
 
     def route(m):
         v = key["routes"].get(m.group(0))
-        return m.group(0) if not v else (v["route"] if v["team"] == t else "다른 팀의 루트")
+        return m.group(0) if not v else (v["route"] if v["team"] == t else M("다른 팀의 루트", "another team's route"))
     return re.sub(r"(?<![A-Za-z0-9])R\d{2}(?!\d)", route, re.sub(r"(?<![A-Za-z0-9])L\d{3}(?!\d)", line, text))
 
 
@@ -75,15 +81,15 @@ def feedback():
     for t in TEAMS:
         kept_routes_t = {r: (local_ids(a, key, t), local_ids(b, key, t)) for r, (a, b) in kept_routes.items()}
         verdict_t = {l: (a, local_ids(b, key, t)) for l, (a, b) in verdict.items()}
-        out = [f"# 팀 {t}에게 — CD 1차 리뷰 결과", "", "## 살아남은 루트와 CD 피드백", "",
-               md_row("루트", "평문 한 줄", "CD 피드백"), "|---|---|---|"]
+        out = [M(f"# 팀 {t}에게 — CD 1차 리뷰 결과", f"# To team {t} — CD review, round 1"), "", M("## 살아남은 루트와 CD 피드백", "## Kept routes and CD feedback"), "",
+               md_row(M("루트", "Route"), M("평문 한 줄", "Plain line"), M("CD 피드백", "CD feedback")), "|---|---|---|"]
         mine = [(r, v) for r, v in key["routes"].items() if v["team"] == t]
         alive = [(r, v) for r, v in mine if r in kept_routes]
-        out += [md_row(v["route"], v["plain"], kept_routes_t[r][1]) for r, v in alive] or ["| (없음) | | |"]
-        out += ["", "## 살아남은 줄", "", md_row("번호", "루트", "헤드라인"), "|---|---|---|"]
-        out += [md_row(v["no"], v["route"], v["text"]) for l, v in key["lines"].items() if v["team"] == t and verdict.get(l, ("",))[0] == "살림"] or ["| (없음) | | |"]
-        out += ["", "## 죽은 줄과 CD의 이유", "", md_row("번호", "루트", "헤드라인", "이유"), "|---|---|---|---|"]
-        out += [md_row(v["no"], v["route"], v["text"], verdict_t[l][1]) for l, v in key["lines"].items() if v["team"] == t and verdict.get(l, ("",))[0] == "죽임"] or ["| (없음) | | | |"]
+        out += [md_row(v["route"], v["plain"], kept_routes_t[r][1]) for r, v in alive] or [M("| (없음) | | |", "| (none) | | |")]
+        out += ["", M("## 살아남은 줄", "## Surviving lines"), "", md_row(M("번호", "No."), M("루트", "Route"), M("헤드라인", "Headline")), "|---|---|---|"]
+        out += [md_row(v["no"], v["route"], v["text"]) for l, v in key["lines"].items() if v["team"] == t and verdict.get(l, ("",))[0] == "살림"] or [M("| (없음) | | |", "| (none) | | |")]
+        out += ["", M("## 죽은 줄과 CD의 이유", "## Killed lines and CD reasons"), "", md_row(M("번호", "No."), M("루트", "Route"), M("헤드라인", "Headline"), M("이유", "Reason")), "|---|---|---|---|"]
+        out += [md_row(v["no"], v["route"], v["text"], verdict_t[l][1]) for l, v in key["lines"].items() if v["team"] == t and verdict.get(l, ("",))[0] == "죽임"] or [M("| (없음) | | | |", "| (none) | | | |")]
         write(run / f"07-feedback-{t}.md", "\n".join(out) + "\n")
     alive_n = sum(1 for v in verdict.values() if v[0] == "살림")
     print(f"살린 루트 {len(kept_routes)}개, 살린 줄 {alive_n}개, 판정 빠진 줄 {len(missing)}개" + (f": {', '.join(missing)}" if missing else ""))
@@ -126,11 +132,11 @@ def round2():
         items.append({"src": "원자료 원문", "team": "원자료", "no": "-", "route": "R00", "rid": "R00", "text": q[0], "defense": "", "source": q[1]})
     rnd.shuffle(items)
     pkey = {}
-    out = ["# CD 2차 리뷰용 — 팀과 판(1차/2차)을 가렸다", "", "## 루트", "", md_row("루트", "평문 한 줄"), "|---|---|"]
+    out = [M("# CD 2차 리뷰용 — 팀과 판(1차/2차)을 가렸다", "# For CD review, round 2 — team and round hidden"), "", M("## 루트", "## Routes"), "", md_row(M("루트", "Route"), M("평문 한 줄", "Plain line")), "|---|---|"]
     if quotes:
-        out.append(md_row("R00", "원자료 원문: 사용 승인을 받은 고객의 말을 고치지 않고 옮긴 줄"))
+        out.append(md_row("R00", M("원자료 원문: 사용 승인을 받은 고객의 말을 고치지 않고 옮긴 줄", "Verbatim source: an approved customer quote, copied without edits")))
     out += [md_row(r, key["routes"][r]["plain"]) for r in sorted({i["rid"] for i in items if i["rid"] in key["routes"]})]
-    out += ["", "## 줄", "", md_row("줄", "루트", "헤드라인", "변론"), "|---|---|---|---|"]
+    out += ["", M("## 줄", "## Lines"), "", md_row(M("줄", "Line"), M("루트", "Route"), M("헤드라인", "Headline"), M("변론", "Defense")), "|---|---|---|---|"]
     for i, it in enumerate(items, 1):
         mid = f"M{i:03d}"
         pkey[mid] = it
@@ -146,9 +152,9 @@ def candidates():
     text = read(run / "08-cd-review-2.md")
     rows = [r for r in table(section(text, "후보")) if len(r) >= 4 and r[1] in pkey]
     notes = [f"{r[1]} 헤드라인이 풀과 다름" for r in rows if r[2] != pkey[r[1]]["text"]]
-    out = ["# CD가 고른 후보", "", md_row("줄", "헤드라인", "CD 설명: 받는 사람에게 주는 것"), "|---|---|---|"]
+    out = [M("# CD가 고른 후보", "# CD shortlist"), "", md_row(M("줄", "Line"), M("헤드라인", "Headline"), M("CD 설명: 받는 사람에게 주는 것", "CD note: what it gives the reader")), "|---|---|---|"]
     # 원문 줄은 광고주가 승인된 후기인지 확인할 수 있게 출처를 붙인다
-    out += [md_row(r[1], pkey[r[1]]["text"], r[3] + (f" [사용 승인을 받은 고객의 말, 출처: {pkey[r[1]]['source']}]" if pkey[r[1]].get("source") else "")) for r in rows]
+    out += [md_row(r[1], pkey[r[1]]["text"], r[3] + (M(f" [사용 승인을 받은 고객의 말, 출처: {pkey[r[1]]['source']}]", f" [Approved customer quote, source: {pkey[r[1]]['source']}]") if pkey[r[1]].get("source") else "")) for r in rows]
     write(run / "09-candidates.md", "\n".join(out) + "\n")
     print(f"후보 {len(rows)}개" + (" / " + "; ".join(notes) if notes else ""))
 
@@ -160,7 +166,7 @@ def known():
     items = [v for b in before for v in team_round1(b)[0].values()]
     body = "\n".join(f"- {v}" for v in items)
     write(run / f"05-known-{t}.md", body + "\n")
-    print(f"팀 {t}에게 넘길 이미 나온 길 {len(items)}개 (앞 팀: {', '.join(before)})")
+    print(M(f"팀 {t}에게 넘길 이미 나온 길 {len(items)}개 (앞 팀: {', '.join(before)})", f"Routes already taken, for team {t}: {len(items)} (earlier teams: {', '.join(before)})"))
     print(body)
 
 

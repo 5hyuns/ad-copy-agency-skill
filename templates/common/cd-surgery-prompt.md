@@ -5,6 +5,7 @@
 **작성자 주의**
 1. CD는 여기서 카피를 쓰지 않는다. 고친 제안 문장을 대신 써 주지도 않는다. 플래너가 고친다.
 2. 판정은 통과 / 돌려보냄 둘 중 하나다. 돌려보내는 것은 실행당 한 번까지다.
+3. 카피 언어가 en이면 맨 아래 "영어로 쓸 때"를 붙인다.
 
 ---
 
@@ -35,3 +36,6 @@
 (무엇이 문제인지. 고친 문장을 대신 쓰지 않는다)
 ```
 끝나면 판정과 이유만 짧게 보고한다.
+
+## 영어로 쓸 때 (카피 언어가 en일 때만 붙인다)
+The brief is in English. Write the result file in English with these headings: `## Verdict` (write `PASS` or `RETURN`), `## Reasons` (three lines at most), `## To the planner` (only when returning; say what is wrong, do not rewrite it).

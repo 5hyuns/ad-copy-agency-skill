@@ -18,7 +18,7 @@
 ## 읽을 것
 1. `{실행 폴더}/03-creative-brief.md` — 크리에이티브 브리프
 2. `{실행 폴더}/02-raw.md` — 원자료
-3. `{스킬}/references/channels.md`의 `{채널}` 절
+3. `{스킬}/references/{시장}/channels.md`의 `{채널}` 절
 
 이 세 파일만 본다. 웹 검색은 하지 않는다.
 

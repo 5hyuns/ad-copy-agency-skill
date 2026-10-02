@@ -9,6 +9,7 @@
 4. "머릿속 과정을 빠짐없이 기록하라", "이 기록으로 심사한다" 같은 표현은 API 안전장치에 걸려 에이전트가 즉시 종료된다. 산출물 항목으로 요구한다.
 5. "날것 그대로의 재료" 칸을 빼지 않는다. 같은 입력에 브리프만 더 준 단일 프롬프트가 세 제품 모두에서 브리프 없는 단일보다 못했다(`skill-tests/2026-10-02-v5-vs-single/result.md` 2차). 브리프를 받은 작가는 단일 제안을 그대로 문장으로 옮겼고, 원자료의 구체 재료(승인된 고객의 말, 제품이 하는 일, 장면)를 버렸다. 재료는 팀 프롬프트가 아니라 브리프 안에 원문으로 싣는다(팀 프롬프트에 "재료를 써라"를 넣으면 목표가 된다는 v1~v4 교훈).
 6. 서저리에서 돌려받아 고칠 때는 아래 "고칠 때"를 붙이고, 이전 브리프와 서저리 파일 경로를 적는다.
+7. 카피 언어가 en이면 맨 아래 "영어로 쓸 때"를 붙인다. 플래너가 하는 일은 같고, 쓰는 말과 절 제목만 바뀐다.
 
 ---
 
@@ -64,3 +65,6 @@
 - 이전 브리프: `{실행 폴더}/03-creative-brief.md`
 - CD의 서저리 의견: `{실행 폴더}/04-surgery.md`
 CD의 의견을 읽고 브리프를 한 번 고친다. 같은 파일을 덮어쓰고, 맨 아래에 `## 고친 것`을 두어 무엇을 왜 바꿨는지 적는다. 의견에 동의하지 않는 부분이 있으면 그 이유도 적는다.
+
+## 영어로 쓸 때 (카피 언어가 en일 때만 붙인다)
+The creative teams will write in English for the {시장} market. Write the whole brief in English, keeping quotes from the raw material in their original language. Use these section titles in this order: `## Task as given`, `## Reframed task`, `## Who`, `## Desired response`, `## Single-minded proposition`, `## Raw material`, `## Reasons to believe`, `## What competitors already say`, `## Tone`, `## Mandatories`, `## Reframe not taken`, `## New findings`, and `## Changes` when revising. Inside `## Reframed task`, write the three lines as `- Method: change the audience / change the problem type / find the gap`, `- Reframed task:` and `- Evidence scene or quote:`. Under `## Desired response`, use `- Think:`, `- Feel:` and `- Do:`. Mark unconfirmed facts `[client to confirm]`.
