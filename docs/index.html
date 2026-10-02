@@ -123,7 +123,7 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
     <div class="frow"><span>CD shortlist</span><div class="bar" style="width:5.1%"></div><span class="n">5</span></div>
     <div class="frow"><span>Client's final</span><div class="bar" style="width:1%"></div><span class="n">1</span></div>
   </div>
-  <p class="muted" style="font-size:.85rem">Line counts from one demo run on a fictional smart pillow. The round 2 pool adds 33 rewritten lines, 3 defended lines and 2 approved customer quotes to the 18 survivors. The agent prompts and the copy are in Korean.</p>
+  <p class="muted" style="font-size:.85rem">Line counts from one demo run on a fictional smart pillow. The round 2 pool adds 33 rewritten lines, 3 defended lines and 2 approved customer quotes to the 18 survivors. It writes Korean copy for the Korean market and English copy for the US market.</p>
 </header>
 
 <section class="stack" aria-labelledby="flow">
@@ -173,7 +173,7 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 <section class="stack" id="usage" aria-labelledby="h-usage">
   <span class="eyebrow">USAGE</span>
   <h2 id="h-usage">Tell it what, for whom, and where it runs</h2>
-  <p>Call it with the slash command or just ask for ad copy or headlines. If a required input is missing it asks first; it never guesses the mode, channel or target. Field names are Korean; the values can be written in any language, and the copy comes out in Korean.</p>
+  <p>Call it with the slash command or just ask for ad copy or headlines. If a required input is missing it asks first; it never guesses the mode, channel or target. Field names are Korean and values can be in any language. Add <code>카피 언어 (copy language): en</code> for English copy; the market then defaults to <code>us</code>, so the client checks against US channel specs and FTC rules.</p>
   <pre class="block">/copy-masters
 주제 (subject): a smart pillow that tilts your head when it hears snoring
 사업 목표 (business goal): more 30-day trial orders from Instagram ads
@@ -182,7 +182,8 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 채널 (channel): SNS 피드 (social feed)
 브랜드명 (brand): Nuumlab
 필수 사항 (must-haves): not a medical device
-사용자 자료 (your material): ./material.md</pre>
+사용자 자료 (your material): ./material.md
+카피 언어 (copy language): en</pre>
   <div class="tbl"><table>
     <thead><tr><th>Input</th><th>Required</th><th>Value</th></tr></thead>
     <tbody>
@@ -196,6 +197,8 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
       <tr><td>필수 사항 must-haves</td><td>no</td><td>What must or must not appear, tone rules</td></tr>
       <tr><td>업종 industry</td><td>no</td><td>Adds industry-specific regulation checks</td></tr>
       <tr><td>사용자 자료 your material</td><td>no</td><td>Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim</td></tr>
+      <tr><td>카피 언어 copy language</td><td>no</td><td><code>ko</code> (default) or <code>en</code></td></tr>
+      <tr><td>시장 market</td><td>no</td><td><code>kr</code> or <code>us</code>: whose channel specs and ad law the client checks against</td></tr>
     </tbody>
   </table></div>
   <h3>Output</h3>
@@ -227,6 +230,7 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
     <li>Compared head to head with a single prompt given the same raw material, the skill's final lines won 0.37 of the time on average. Treat its output as about as good as, or worse than, one well-written prompt.</li>
     <li>The reason to use it is the process. You can follow each step, and the brief check and client review catch factual errors a single prompt repeated across runs, such as unsupported claims or edited customer quotes.</li>
     <li>The CD and the client are the same model. Research suggests model judges match people poorly on originality and surprise, and re-running the same pool can change the final line.</li>
+    <li>English copy has been tested once, on one fictional US product. The run worked end to end, but its three picks won 0.39 of blind comparisons against two single-prompt runs. The client's longest pick lost every pair while an alternate was the second strongest line, and the English CD drifted toward longer lines. The US checklist did catch a customer quote under the FTC's typical-results rule (16 CFR 255.2).</li>
     <li>It produces headlines. Visuals, subheads and body copy are out of scope.</li>
     <li>Its only material is web sources and what you give it. Reframes that come from product demos, focus groups or a remark in a meeting room are out of reach.</li>
   </ul>

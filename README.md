@@ -6,7 +6,7 @@ An open-source [Claude Code](https://claude.com/claude-code) skill for AI ad cop
 
 Ads are rarely one person writing one good sentence. A planner reframes the brief, a creative director reviews it, several teams write a lot of lines, the CD cuts them down more than once, and the client picks. The skill follows that order. Each role is a separate agent that sees only the files the previous step left behind, teams never pick their own lines, and the CD judges lines with team names hidden. At the end you get a final headline, two alternates, the path each line took, and a table checking that every step ran as the agency workflow expects.
 
-> **There is no evidence that it beats a single well-written prompt.** Read [Limits](#limits) first. The agent prompts and the copy are in Korean.
+> **There is no evidence that it beats a single well-written prompt.** Read [Limits](#limits) first. It writes Korean copy for the Korean market and English copy for the US market.
 
 ![CD review sheet: lines kept and killed](docs/og.png)
 
@@ -25,7 +25,7 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skil
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters
 ```
 
-Start a new Claude Code session and call it. Field names are Korean; values can be in any language.
+Start a new Claude Code session and call it. Add `카피 언어 (copy language): en` for English copy; the market then defaults to `us`. Field names are Korean; values can be in any language.
 
 ```
 /copy-masters
@@ -37,6 +37,7 @@ Start a new Claude Code session and call it. Field names are Korean; values can 
 브랜드명 (brand): Nuumlab
 필수 사항 (must-haves): not a medical device
 사용자 자료 (your material): ./material.md
+카피 언어 (copy language): en
 ```
 
 You can also just ask for ad copy or headlines in plain words. If a required input is missing, it asks before starting.
@@ -57,6 +58,8 @@ Requirements: Claude Code and Python 3 (the helper scripts use only the standard
 | 필수 사항 must-haves | no | What must or must not appear, tone rules |
 | 업종 industry | no | Adds industry-specific regulation checks |
 | 사용자 자료 your material | no | Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim |
+| 카피 언어 copy language | no | `ko` (default) or `en` |
+| 시장 market | no | `kr` or `us`: which country's channel specs and ad law the client checks against. Defaults to `kr` for Korean copy and `us` for English |
 
 It never guesses the mode, channel or target. Product numbers, conditions, reviews and certifications come only from the raw material or your files; anything unverified is flagged `[의뢰인 확인 필요]` (client to confirm).
 
@@ -88,15 +91,17 @@ The run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
 - Compared head to head with a single prompt given the same raw material, the skill's final lines won 0.37 of the time on average. Treat its output as about as good as, or worse than, one well-written prompt.
 - The reason to use it is the process. You can follow each step, and the brief check and client review catch factual errors a single prompt repeated across runs, such as unsupported claims or edited customer quotes.
 - The CD and the client are the same model. Re-running the same pool can change the final line.
-- It writes headlines in Korean. Visuals, subheads and body copy are out of scope.
+- **English copy has been tested once.** On one fictional US product the English run worked end to end (all 46 process checks, every verdict parsed), but its three picks won 0.39 of blind comparisons against two single-prompt runs. The client's longest pick lost every pair while one of its alternates was the second strongest line, and the English CD drifted toward longer lines (41.5 characters in round 1, 57.2 on the shortlist). The US regulation checklist did its job: the client dropped a customer quote under the FTC's typical-results rule (16 CFR 255.2).
+- It writes headlines only. Visuals, subheads and body copy are out of scope.
 - See "알려진 한계" (known limits) in [SKILL.md](SKILL.md) for the full list. Paths under `reports/`, `research_notes/` and `skill-tests/` cited there are design evidence kept outside this repository and are not needed to run the skill.
 
 ## Repository layout
 
 - `SKILL.md`: steps, principles and known limits
-- `templates/`: prompts for each role's agent
+- `templates/common/`: collection, planner and creative surgery prompts, shared by both languages
+- `templates/ko/`, `templates/en/`: team, CD and client prompts, written separately for each language rather than translated
 - `scripts/`: `build_pool.py` moves and hides lines between roles, `assemble.py` builds the final report and process check
-- `references/`: character limits per channel, fact and regulation checklist
+- `references/kr/`, `references/us/`: channel specs and the fact and regulation checklist for each market (US: FTC Act Section 5, deception and substantiation statements, 16 CFR 255 and 465, FDA general wellness)
 - `docs/`: the project site and demo page (GitHub Pages)
 
 ## License
