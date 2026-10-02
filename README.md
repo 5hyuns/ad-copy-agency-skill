@@ -1,104 +1,106 @@
-# ad-copy-agency-skill
+# ad-copy-agency-skill: AI copywriting that works like an ad agency
 
-**Language**: 한국어 | [English](README.en.md) · **소개 페이지**: https://5hyuns.github.io/ad-copy-agency-skill/
+**Language**: English | [한국어](README.ko.md) · **Site**: https://5hyuns.github.io/ad-copy-agency-skill/ · **Demo**: https://5hyuns.github.io/ad-copy-agency-skill/demo/
 
-광고 대행사의 작업 흐름을 역할별 에이전트로 따라가 헤드라인을 쓰는 Claude Code 스킬입니다. 스킬 이름은 `copy-masters`입니다.
+An open-source [Claude Code](https://claude.com/claude-code) skill for AI ad copywriting. It writes advertising headlines by running a real ad agency workflow with one AI agent per role: planner, creative director, three creative teams and the client. The skill is named `copy-masters`.
 
-광고는 한 사람이 문장을 잘 써서 나오지 않습니다. 플래너가 받은 과제를 다시 정의하고, CD가 브리프를 심사하고, 여러 팀이 많이 써 오고, CD가 여러 번 쳐내고, 광고주가 고릅니다. 이 스킬은 그 순서를 따라갑니다. 역할마다 다른 에이전트가 맡고, 서로의 작업 과정은 보지 않고 앞 단계가 남긴 파일만 받습니다. 사람이 중간에 고르는 단계는 없고, 끝나면 결과와 함께 각 단계가 업계 흐름대로 돌았는지 점검한 표를 냅니다.
+Ads are rarely one person writing one good sentence. A planner reframes the brief, a creative director reviews it, several teams write a lot of lines, the CD cuts them down more than once, and the client picks. The skill follows that order. Each role is a separate agent that sees only the files the previous step left behind, teams never pick their own lines, and the CD judges lines with team names hidden. At the end you get a final headline, two alternates, the path each line took, and a table checking that every step ran as the agency workflow expects.
 
-> 단일 프롬프트보다 결과가 낫다는 근거는 없습니다. 아래 [한계](#한계)를 먼저 읽어 주세요.
+> **There is no evidence that it beats a single well-written prompt.** Read [Limits](#limits) first. The agent prompts and the copy are in Korean.
 
-## 빠른 시작
+![CD review sheet: lines kept and killed](docs/og.png)
 
-스킬 폴더에 복제합니다. 폴더 이름은 `copy-masters`로 둡니다.
+## Quick start
+
+Clone it into a Claude Code skills folder. Keep the folder name `copy-masters`.
 
 ```bash
-# 모든 프로젝트에서 (macOS, Linux, Git Bash)
+# all projects (macOS, Linux, Git Bash)
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters
 
-# 모든 프로젝트에서 (Windows PowerShell)
+# all projects (Windows PowerShell)
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skills\copy-masters"
 
-# 한 프로젝트에서만
+# one project only
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters
 ```
 
-새 Claude Code 세션을 열고 이렇게 부릅니다.
+Start a new Claude Code session and call it. Field names are Korean; values can be in any language.
 
 ```
 /copy-masters
-주제: 코골이를 감지하면 머리 각도를 바꿔 주는 스마트 베개
-사업 목표: 인스타그램 광고에서 30일 체험 주문을 늘린다
-타깃: 코골이 때문에 배우자와 따로 자거나 눈치 보는 30~50대
-모드: 퍼포먼스
-채널: SNS 피드
-브랜드명: 누움랩
-필수 사항: 의료기기 아님
-사용자 자료: ./material.md
+주제 (subject): a smart pillow that tilts your head when it hears snoring
+사업 목표 (business goal): more 30-day trial orders from Instagram ads
+타깃 (target): people in their 30s-50s who sleep apart because a partner snores
+모드 (mode): 퍼포먼스 (performance)
+채널 (channel): SNS 피드 (social feed)
+브랜드명 (brand): Nuumlab
+필수 사항 (must-haves): not a medical device
+사용자 자료 (your material): ./material.md
 ```
 
-슬래시 없이 "광고 카피 써줘", "헤드라인 뽑아줘"라고 해도 스킬이 불립니다. 필수 인자가 빠지면 먼저 묻습니다.
+You can also just ask for ad copy or headlines in plain words. If a required input is missing, it asks before starting.
 
-필요한 것은 Claude Code와 Python 3입니다. 스크립트는 표준 라이브러리만 씁니다. 원자료 수집에는 웹 검색 도구를 쓰고, 없으면 사용자 자료만으로 진행합니다.
+Requirements: Claude Code and Python 3 (the helper scripts use only the standard library). Raw material collection uses a web search tool when available and falls back to the material you provide. Update with `git pull` in the install folder.
 
-업데이트는 설치한 폴더에서 `git pull` 하면 됩니다.
+## Inputs
 
-## 인자
-
-| 인자 | 필수 | 값 |
+| Input | Required | Value |
 |---|---|---|
-| 주제 | 예 | 무엇을 광고하는가 |
-| 사업 목표 | 예 | 한 줄. "체험 주문을 늘린다"처럼 짧게 |
-| 타깃 | 예 | 누구에게 말하는가 |
-| 모드 | 예 | `퍼포먼스`(전환·클릭) 또는 `브랜드`(기억·태도) |
-| 채널 | 예 | `SNS 피드`, `검색광고`, `상세·랜딩페이지`, `영상 스크립트` 중 하나 |
-| 브랜드명 | 예 | 산출물 폴더와 학습 로그의 이름 |
-| 제품 진실 | 아니오 | 회사가 스스로 말하는 제품의 핵심 |
-| 필수 사항 | 아니오 | 꼭 들어가거나 빠져야 할 것, 말투 조건 |
-| 업종 | 아니오 | 주어지면 업종별 규제를 더 점검 |
-| 사용자 자료 | 아니오 | 소개서, 후기, 인터뷰. 사용 승인을 받은 고객의 말은 원문 그대로 후보에 오릅니다 |
+| 주제 subject | yes | What is being advertised |
+| 사업 목표 business goal | yes | One short line, such as "more trial orders" |
+| 타깃 target | yes | Who the ad speaks to |
+| 모드 mode | yes | `퍼포먼스` performance (clicks, conversions) or `브랜드` brand (memory, attitude) |
+| 채널 channel | yes | `SNS 피드` social feed, `검색광고` search ads, `상세·랜딩페이지` product or landing page, `영상 스크립트` video script |
+| 브랜드명 brand | yes | Names the output folder and the learning log |
+| 제품 진실 product truth | no | What the company itself says is the core of the product |
+| 필수 사항 must-haves | no | What must or must not appear, tone rules |
+| 업종 industry | no | Adds industry-specific regulation checks |
+| 사용자 자료 your material | no | Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim |
 
-모드, 채널, 타깃은 추측하지 않습니다. 제품의 수치, 조건, 후기, 인증은 원자료나 사용자 자료에 있는 것만 쓰고, 확인이 필요한 사실에는 `[의뢰인 확인 필요]`가 붙습니다.
+It never guesses the mode, channel or target. Product numbers, conditions, reviews and certifications come only from the raw material or your files; anything unverified is flagged `[의뢰인 확인 필요]` (client to confirm).
 
-## 흐름
+## Workflow
 
-| 단계 | 역할 | 하는 일 | 산출물 |
+| Step | Role | What happens | Output |
 |---|---|---|---|
-| 1 | OT | 받은 인자를 해석 없이 적는다 | `01-client-brief.md` |
-| 2 | 수집 | 제품 사실, 사람들이 쓴 말, 경쟁 문구를 원문과 출처로 모은다 | `02-raw.md` |
-| 3 | 플래너 | 과제를 "이 광고가 말할 것"으로 다시 정의하고 브리프를 쓴다 | `03-creative-brief.md` |
-| 4 | CD 서저리 | 브리프를 심사한다. 돌려보내면 플래너가 한 번 고친다 | `04-surgery.md` |
-| 5 | 팀 셋 | 차례로 돈다. 팀마다 루트 3~5개, 33줄. 다음 팀은 앞 팀의 길을 피한다 | `05-team-*.md` |
-| 6 | CD 1차 | 기준을 먼저 적고, 팀을 가린 줄을 하나씩 판정한다. 루트 3~5개를 살린다 | `06-cd-review-1.md` |
-| 7 | 재작업·변론 | 살아남은 루트로 다시 쓰고, 죽은 줄 하나를 변론할 수 있다 | `07-team-*.md` |
-| 8 | CD 2차 | 변론을 판정하고 후보 5줄 안팎을 고른다 | `08-cd-review-2.md` |
-| 9 | 광고주 | 사실·규제 검수 뒤 최종 한 줄과 대안 둘을 고른다 | `09-client-review.md` |
-| 10 | 넘기기 | 최종 줄이 거쳐 온 길과 과정 점검표를 만든다 | `10-final.md`, `10-process-check.md` |
+| 1 | Client brief | Inputs written down as given | `01-client-brief.md` |
+| 2 | Raw material | Product facts, what people wrote, competitor copy, verbatim with sources | `02-raw.md` |
+| 3 | Planner | Reframes the task as "what this ad must say" and writes the creative brief | `03-creative-brief.md` |
+| 4 | Creative surgery | CD reviews the brief; the planner may revise once | `04-surgery.md` |
+| 5 | Three teams | Run in sequence, 3 to 5 routes and 33 lines each; later teams avoid routes already taken | `05-team-*.md` |
+| 6 | CD round 1 | Criteria first, then keep or kill on every line; 3 to 5 routes survive | `06-cd-review-1.md` |
+| 7 | Rework and defense | Teams rewrite surviving routes and may defend one killed line | `07-team-*.md` |
+| 8 | CD round 2 | Rules on defenses, shortlists about five lines | `08-cd-review-2.md` |
+| 9 | Client | Fact and advertising-law check, then one final line and two alternates | `09-client-review.md` |
+| 10 | Handoff | The path each line took and a process check table | `10-final.md`, `10-process-check.md` |
 
-산출물은 작업 폴더의 `copy-runs/<브랜드>/<날짜>-<주제>/`에 쌓입니다. 같은 브랜드로 다시 돌리면 `copy-runs/<브랜드>/learning-log.md`의 교훈을 먼저 알려 줍니다.
+Outputs go to `copy-runs/<brand>/<date>-<topic>/` in your working directory. Running the same brand again surfaces lessons from `copy-runs/<brand>/learning-log.md` first.
 
-## 시연
+## Demo
 
-가상 제품 고요베개(코골이 감지 스마트 베개)로 한 번 돌린 기록입니다. 최종 줄은 승인된 구매자 후기 원문 "남편이 처음으로 제가 먼저 잠들었대요"였습니다. 세 팀이 낸 99줄과 CD 판정, 변론, 검수까지 [시연 페이지](https://5hyuns.github.io/ad-copy-agency-skill/demo/)에서 볼 수 있습니다.
+One full run on a fictional smart pillow. The planner moved the audience from the snorer to the partner lying awake next to them, the CD sent the first brief back once, three teams wrote 99 lines, and the client picked an approved customer quote, "남편이 처음으로 제가 먼저 잠들었대요" ("My husband says that for the first time, I fell asleep first"). Every line with the CD's verdict and reason is on the [demo page](https://5hyuns.github.io/ad-copy-agency-skill/demo/).
 
-시간과 비용은 이 시연 기준으로 하위 에이전트 13개, 20분 안팎(에이전트 실행 시간 합계 약 19분), 하위 에이전트 토큰 약 104만이었습니다.
+The run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
 
-## 한계
+## Limits
 
-- 같은 원자료를 받은 단일 프롬프트와 최종 줄을 비교한 시험에서 이 스킬의 승률은 평균 0.37이었습니다. 결과는 단일 프롬프트보다 대체로 못하거나 비슷하다고 봅니다.
-- 쓸 이유는 과정에 있습니다. 업계 흐름을 단계별로 따라가 볼 수 있고, 브리프 대조와 광고주 검수가 근거 없는 효능이나 승인받은 고객 말의 임의 수정 같은 사실 오류를 막습니다.
-- CD와 광고주도 같은 모델입니다. 같은 풀로 다시 돌려도 최종 줄이 크게 달라집니다.
-- 결과물은 헤드라인 줄입니다. 그림, 서브 카피, 본문은 이 스킬 밖에 있습니다.
-- 자세한 한계는 [SKILL.md](SKILL.md)의 "알려진 한계"에 있습니다. SKILL.md와 템플릿이 설계 근거로 가리키는 `reports/`, `research_notes/`, `skill-tests/` 경로는 이 저장소에 들어 있지 않습니다. 스킬 실행에는 필요하지 않습니다.
+- Compared head to head with a single prompt given the same raw material, the skill's final lines won 0.37 of the time on average. Treat its output as about as good as, or worse than, one well-written prompt.
+- The reason to use it is the process. You can follow each step, and the brief check and client review catch factual errors a single prompt repeated across runs, such as unsupported claims or edited customer quotes.
+- The CD and the client are the same model. Re-running the same pool can change the final line.
+- It writes headlines in Korean. Visuals, subheads and body copy are out of scope.
+- See "알려진 한계" (known limits) in [SKILL.md](SKILL.md) for the full list. Paths under `reports/`, `research_notes/` and `skill-tests/` cited there are design evidence kept outside this repository and are not needed to run the skill.
 
-## 구성
+## Repository layout
 
-- `SKILL.md`: 단계와 원칙, 알려진 한계
-- `templates/`: 역할별 에이전트 프롬프트
-- `scripts/`: 역할 사이에서 줄을 모으고 가리는 `build_pool.py`, 최종본과 과정 점검을 만드는 `assemble.py`
-- `references/`: 채널별 글자 수, 사실·규제 검수표
-- `docs/`: 소개 페이지와 시연 페이지(GitHub Pages)
+- `SKILL.md`: steps, principles and known limits
+- `templates/`: prompts for each role's agent
+- `scripts/`: `build_pool.py` moves and hides lines between roles, `assemble.py` builds the final report and process check
+- `references/`: character limits per channel, fact and regulation checklist
+- `docs/`: the project site and demo page (GitHub Pages)
 
-## 이름
+## Background
 
-`copy-masters`는 v1~v4에서 대가(Ogilvy, Bernbach, 다니야마, 정철)의 방식을 옮기던 때 붙은 이름입니다. v5는 그 구조를 내리고 대행사 작업 흐름을 따릅니다. 설계 근거는 잘 알려진 광고 25편의 제작 기록과 Turnbull & Wheeler의 런던 대행사 연구에서 가져왔습니다.
+The name copy-masters comes from versions 1 to 4, which imitated the methods of famous copywriters (David Ogilvy, Bill Bernbach, Taniyama Masakazu, Jung Chul). Version 5 dropped that design and follows the agency workflow instead. The design draws on production records of 25 well-known campaigns and on Turnbull & Wheeler's research on London advertising agencies, where only two of 24 steps produced ideas and the rest were about agreeing on the problem and checking the work.
+
+Related keywords: AI copywriting, ad copy generator, headline generator, Claude skills, Claude Code skill, multi-agent workflow, creative brief, advertising agency, 광고 카피, 카피라이팅, 헤드라인.
