@@ -99,6 +99,10 @@ The run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
 - `references/`: character limits per channel, fact and regulation checklist
 - `docs/`: the project site and demo page (GitHub Pages)
 
+## License
+
+MIT. See [LICENSE](LICENSE).
+
 ## Background
 
 The name copy-masters comes from versions 1 to 4, which imitated the methods of famous copywriters (David Ogilvy, Bill Bernbach, Taniyama Masakazu, Jung Chul). Version 5 dropped that design and follows the agency workflow instead. The design draws on production records of 25 well-known campaigns and on Turnbull & Wheeler's research on London advertising agencies, where only two of 24 steps produced ideas and the rest were about agreeing on the problem and checking the work.

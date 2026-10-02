@@ -99,6 +99,10 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy
 - `references/`: 채널별 글자 수, 사실·규제 검수표
 - `docs/`: 소개 페이지와 시연 페이지(GitHub Pages)
 
+## 라이선스
+
+MIT. [LICENSE](LICENSE)를 보세요.
+
 ## 이름
 
 `copy-masters`는 v1~v4에서 대가(Ogilvy, Bernbach, 다니야마, 정철)의 방식을 옮기던 때 붙은 이름입니다. v5는 그 구조를 내리고 대행사 작업 흐름을 따릅니다. 설계 근거는 잘 알려진 광고 25편의 제작 기록과 Turnbull & Wheeler의 런던 대행사 연구에서 가져왔습니다.
