@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ad-copy-agency-skill</title>
+<meta name="description" content="광고 대행사의 작업 흐름을 역할별 에이전트로 따라가 헤드라인을 쓰는 Claude Code 스킬">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 한 기둥 문서. CD의 빨간 펜 자국이 유일한 강조색이고, 나머지는 잉크와 종이 */
+:root {
+  --bg: #f6f6f3; --surface: #ffffff; --ink: #1c1f26; --muted: #5f6470; --line: #dedfda;
+  --pen: #c23a2b; --pen-soft: #f7e3df; --keep: #2f6b4f; --keep-soft: #e2efe7; --code-bg: #eeefeb;
+  --display: "Hahmlet", "Nanum Myeongjo", serif;
+  --body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171c; --surface: #1c1f26; --ink: #e7e8ea; --muted: #a0a5b0; --line: #2d313a;
+  --pen: #f07a6a; --pen-soft: #3b211e; --keep: #8fd0ae; --keep-soft: #1c3229; --code-bg: #23262e; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15171c; --surface: #1c1f26; --ink: #e7e8ea; --muted: #a0a5b0; --line: #2d313a;
+  --pen: #f07a6a; --pen-soft: #3b211e; --keep: #8fd0ae; --keep-soft: #1c3229; --code-bg: #23262e; color-scheme: dark }
+* { box-sizing: border-box }
+html { -webkit-text-size-adjust: 100% }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.75 var(--body); padding-inline: 16px; padding-block: 40px 80px }
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 64px }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.3 }
+h1 { font-size: clamp(2rem, 6vw, 3rem) }
+h2 { font-size: 1.5rem }
+h3 { font-size: 1.05rem }
+p { margin: 0; max-width: 65ch }
+a { color: var(--pen) }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px }
+.eyebrow { font-size: .75rem; letter-spacing: .1em; color: var(--muted); font-weight: 600 }
+.stack { display: grid; gap: 16px; min-width: 0 }
+.muted { color: var(--muted) }
+nav.top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-size: .85rem }
+nav.top a { color: var(--muted); text-decoration: none }
+nav.top a:hover { color: var(--ink) }
+.lede { font-size: 1.1rem }
+code, pre { font-family: var(--mono); font-size: .86rem }
+:not(pre) > code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px }
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0 }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code-bg); border-radius: 6px; padding: 12px 14px; overflow-x: auto }
+.cmd button { font: inherit; font-size: .8rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 0 12px; cursor: pointer; white-space: nowrap }
+pre.block { margin: 0; background: var(--code-bg); border-radius: 6px; padding: 14px; overflow-x: auto; line-height: 1.6 }
+/* 깔때기: 실제 시연의 줄 수, 99를 100%로 */
+.funnel { display: grid; gap: 6px }
+.frow { display: grid; grid-template-columns: 8.5em 1fr 2.5em; gap: 10px; align-items: center; font-size: .85rem }
+.bar { height: 10px; background: var(--ink); border-radius: 2px; min-width: 3px }
+.frow:last-child .bar { background: var(--pen) }
+.n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600 }
+/* 단계 */
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s }
+ol.steps li { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); counter-increment: s }
+ol.steps li::before { content: counter(s); font-family: var(--display); font-size: 1.3rem; font-weight: 700; color: var(--muted); line-height: 1.3 }
+ol.steps .role { font-weight: 600 }
+ol.steps .out { font-family: var(--mono); font-size: .78rem; color: var(--muted) }
+ol.steps p { font-size: .93rem }
+/* CD 빨간 펜 */
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 20px }
+.ln { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 12px 0; border-bottom: 1px dashed var(--line); align-items: baseline }
+.ln:last-child { border-bottom: 0 }
+.ln .t { font-family: var(--display); font-size: 1.05rem; font-weight: 500 }
+.ln.cut .t { text-decoration: line-through; text-decoration-color: var(--pen); text-decoration-thickness: 2px; color: var(--muted) }
+.ln .mark { font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap }
+.ln.cut .mark { color: var(--pen); background: var(--pen-soft) }
+.ln.keep .mark { color: var(--keep); background: var(--keep-soft) }
+.ln .r { grid-column: 1 / -1; font-size: .82rem; color: var(--pen); font-style: italic }
+.ln.keep .r { color: var(--keep) }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface) }
+table { border-collapse: collapse; width: 100%; font-size: .88rem }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top }
+tr:last-child td { border-bottom: 0 }
+th { font-size: .72rem; color: var(--muted); letter-spacing: .05em; font-weight: 600; white-space: nowrap }
+td:first-child { white-space: nowrap; font-weight: 500 }
+.demo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px }
+@media (max-width: 640px) { .demo { grid-template-columns: 1fr } }
+.demo .q { font-family: var(--display); font-size: 1.4rem; font-weight: 700; line-height: 1.45 }
+.btn { display: inline-block; text-decoration: none; background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: .9rem; width: fit-content }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 65ch }
+footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="top" aria-label="바로가기">
+  <span class="eyebrow">AD-COPY-AGENCY-SKILL · copy-masters v5</span>
+  <span style="display:flex;gap:16px;flex-wrap:wrap">
+    <a href="#install">설치</a><a href="#usage">사용법</a><a href="#demo">시연</a><a href="#limits">한계</a>
+    <a href="https://github.com/5hyuns/ad-copy-agency-skill">GitHub</a>
+  </span>
+</nav>
+
+<header class="stack">
+  <h1>헤드라인 한 줄을, 대행사가 일하는 순서대로</h1>
+  <p class="lede">광고는 한 사람이 문장을 잘 써서 나오지 않습니다. 플래너가 과제를 다시 정의하고, CD가 브리프를 심사하고, 여러 팀이 많이 써 오고, CD가 여러 번 쳐내고, 광고주가 고릅니다. 이 Claude Code 스킬은 그 흐름을 역할별 에이전트로 따라가 헤드라인을 냅니다.</p>
+  <div class="cmd">
+    <pre id="clone">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre>
+    <button type="button" data-copy="clone">복사</button>
+  </div>
+  <div class="funnel" aria-label="시연 실행의 줄 수 흐름">
+    <div class="frow"><span>세 팀 1차</span><div class="bar" style="width:100%"></div><span class="n">99</span></div>
+    <div class="frow"><span>CD 1차 살림</span><div class="bar" style="width:18.2%"></div><span class="n">18</span></div>
+    <div class="frow"><span>CD 2차 풀</span><div class="bar" style="width:56.6%"></div><span class="n">56</span></div>
+    <div class="frow"><span>CD 후보</span><div class="bar" style="width:5.1%"></div><span class="n">5</span></div>
+    <div class="frow"><span>광고주 최종</span><div class="bar" style="width:1%"></div><span class="n">1</span></div>
+  </div>
+  <p class="muted" style="font-size:.85rem">가상 제품 고요베개로 돌린 시연 한 번의 줄 수입니다. 2차 풀은 1차 생존 줄에 재작업 33줄, 변론 3줄, 승인된 고객 후기 원문 2줄이 더해진 것입니다.</p>
+</header>
+
+<section class="stack" aria-labelledby="flow">
+  <span class="eyebrow">흐름</span>
+  <h2 id="flow">열 단계, 역할마다 다른 에이전트</h2>
+  <p>역할은 서로의 작업 과정을 보지 않고 앞 단계가 남긴 파일만 받습니다. 쓴 팀은 자기 줄을 고르지 않고, CD는 어느 팀의 줄인지 모른 채 판정합니다. 런던 대행사 연구(Turnbull &amp; Wheeler)가 기록한 24단계 가운데 아이디어를 내는 단계는 둘뿐이고 나머지는 과제 합의와 검증이었습니다. 이 스킬도 대부분의 단계를 거르고 고르는 데 씁니다.</p>
+  <ol class="steps">
+    <li><div><span class="role">OT</span> <span class="out">01-client-brief.md</span><p>받은 인자를 해석 없이 그대로 적습니다.</p></div></li>
+    <li><div><span class="role">원자료 수집</span> <span class="out">02-raw.md</span><p>제품 사실, 사람들이 실제로 쓴 말, 경쟁 문구를 원문 그대로 출처와 함께 모읍니다. 해석은 하지 않습니다.</p></div></li>
+    <li><div><span class="role">플래너</span> <span class="out">03-creative-brief.md</span><p>받은 과제를 "이 광고가 말할 것"으로 다시 정의합니다. 말할 상대 바꾸기, 문제 종류 바꾸기, 빈자리 찾기 가운데 하나를 쓰고, 근거가 된 한 장면을 원자료 번호로 가리킵니다.</p></div></li>
+    <li><div><span class="role">CD 크리에이티브 서저리</span> <span class="out">04-surgery.md</span><p>브리프를 팀에 넘기기 전에 심사합니다. 돌려보내면 플래너가 한 번 고칩니다.</p></div></li>
+    <li><div><span class="role">크리에이티브 팀 셋, 차례로</span> <span class="out">05-team-A/B/C.md</span><p>팀마다 루트 3~5개, 33줄. 다음 팀은 앞 팀이 연 길을 "이미 나온 길"로 받고 다른 길을 찾습니다.</p></div></li>
+    <li><div><span class="role">CD 1차 리뷰</span> <span class="out">06-cd-review-1.md</span><p>기준을 먼저 적고, 팀 이름을 가린 줄을 하나씩 살림과 죽임으로 판정합니다. 발전시킬 루트 3~5개에 피드백을 줍니다.</p></div></li>
+    <li><div><span class="role">재작업과 변론</span> <span class="out">07-team-A/B/C.md</span><p>팀은 살아남은 루트로 다시 쓰고, 죽은 줄 하나를 변론할 수 있습니다. 승인된 고객의 말이 있으면 원문 그대로 풀에 들어갑니다.</p></div></li>
+    <li><div><span class="role">CD 2차 리뷰</span> <span class="out">08-cd-review-2.md</span><p>변론을 판정하고, 광고주에게 들고 갈 후보를 5줄 안팎으로 고릅니다.</p></div></li>
+    <li><div><span class="role">광고주</span> <span class="out">09-client-review.md</span><p>사실·규제 검수를 먼저 하고, 최종 한 줄과 대안 둘을 고릅니다. 확인이 필요한 사실에는 [의뢰인 확인 필요]를 붙입니다.</p></div></li>
+    <li><div><span class="role">넘기기</span> <span class="out">10-final.md · 10-process-check.md</span><p>최종 줄이 거쳐 온 길과, 각 단계가 업계 흐름대로 돌았는지 점검한 표를 냅니다.</p></div></li>
+  </ol>
+</section>
+
+<section class="stack" aria-labelledby="pen">
+  <span class="eyebrow">CD 1차 리뷰에서</span>
+  <h2 id="pen">줄마다 판정과 짧은 이유가 남습니다</h2>
+  <p>시연에서 CD가 실제로 단 판정입니다. 마음에 드는지, 장단점이 몇 개인지로 고르지 않고 먼저 적어 둔 기준에 대 봅니다. 길이와 정보량은 판정 이유가 되지 않습니다.</p>
+  <div class="sheet">
+    <div class="ln keep"><span class="t">다음 코골이까지 몇 초 남았는지 세고 있는 당신에게.</span><span class="mark">살림</span><span class="r">옆사람을 "밤새 듣는 사람"으로 본 것이 발견</span></div>
+    <div class="ln keep"><span class="t">이제 팔꿈치는 쉬게 두세요.</span><span class="mark">살림</span><span class="r">옆사람이 밤마다 하던 손일을 보여 줌</span></div>
+    <div class="ln cut"><span class="t">밤이 바뀌는 데 필요한 건 고개 각도 하나였다.</span><span class="mark">죽임</span><span class="r">작동이 주인공, 경쟁 기술 말과 겹침</span></div>
+    <div class="ln cut"><span class="t">그 사람 습관은 못 고쳐도, 고개 각도는 바뀝니다.</span><span class="mark">죽임</span><span class="r">코골이를 습관 탓으로 봄</span></div>
+    <div class="ln cut"><span class="t">오늘 밤부터 30일, 먼저 잠드는 쪽이 이깁니다.</span><span class="mark">죽임</span><span class="r">내기 구도가 둘을 맞세움</span></div>
+  </div>
+</section>
+
+<section class="stack" id="install" aria-labelledby="h-install">
+  <span class="eyebrow">설치</span>
+  <h2 id="h-install">스킬 폴더에 복제하면 끝입니다</h2>
+  <p>모든 프로젝트에서 쓰려면 사용자 스킬 폴더에, 한 프로젝트에서만 쓰려면 그 프로젝트의 <code>.claude/skills/</code>에 둡니다. 폴더 이름은 <code>copy-masters</code>로 합니다.</p>
+  <h3>모든 프로젝트 (macOS · Linux · Git Bash)</h3>
+  <div class="cmd"><pre id="c1">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre><button type="button" data-copy="c1">복사</button></div>
+  <h3>모든 프로젝트 (Windows PowerShell)</h3>
+  <div class="cmd"><pre id="c2">git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skills\copy-masters"</pre><button type="button" data-copy="c2">복사</button></div>
+  <h3>한 프로젝트에서만</h3>
+  <div class="cmd"><pre id="c3">git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters</pre><button type="button" data-copy="c3">복사</button></div>
+  <p class="muted" style="font-size:.9rem">필요한 것은 Claude Code와 Python 3입니다(역할 사이에서 줄을 모으고 가리는 스크립트가 표준 라이브러리만 씁니다). 원자료 수집에 웹 검색 도구를 쓰고, 없으면 사용자 자료만으로 진행합니다. 새 세션을 열면 스킬 목록에 <code>copy-masters</code>가 보입니다.</p>
+</section>
+
+<section class="stack" id="usage" aria-labelledby="h-usage">
+  <span class="eyebrow">사용법</span>
+  <h2 id="h-usage">무엇을, 누구에게, 어디에 싣는지 알려 주세요</h2>
+  <p>슬래시 명령으로 부르거나 "광고 카피 써줘", "헤드라인 뽑아줘"처럼 말로 부탁하면 됩니다. 필수 인자가 빠지면 먼저 묻고, 모드·채널·타깃은 추측하지 않습니다.</p>
+  <pre class="block">/copy-masters
+주제: 코골이를 감지하면 머리 각도를 바꿔 주는 스마트 베개
+사업 목표: 인스타그램 광고에서 30일 체험 주문을 늘린다
+타깃: 코골이 때문에 배우자와 따로 자거나 눈치 보는 30~50대
+모드: 퍼포먼스
+채널: SNS 피드
+브랜드명: 누움랩
+필수 사항: 의료기기 아님
+사용자 자료: ./material.md   (제품 소개서, 승인된 후기 등)</pre>
+  <div class="tbl"><table>
+    <thead><tr><th>인자</th><th>필수</th><th>값</th></tr></thead>
+    <tbody>
+      <tr><td>주제</td><td>예</td><td>무엇을 광고하는가</td></tr>
+      <tr><td>사업 목표</td><td>예</td><td>한 줄. "체험 주문을 늘린다"처럼 짧게</td></tr>
+      <tr><td>타깃</td><td>예</td><td>누구에게 말하는가</td></tr>
+      <tr><td>모드</td><td>예</td><td>퍼포먼스(전환·클릭) 또는 브랜드(기억·태도)</td></tr>
+      <tr><td>채널</td><td>예</td><td>SNS 피드, 검색광고, 상세·랜딩페이지, 영상 스크립트 중 하나</td></tr>
+      <tr><td>브랜드명</td><td>예</td><td>산출물 폴더와 학습 로그의 이름</td></tr>
+      <tr><td>제품 진실</td><td>아니오</td><td>회사가 스스로 말하는 제품의 핵심</td></tr>
+      <tr><td>필수 사항</td><td>아니오</td><td>꼭 들어가거나 빠져야 할 것, 말투 조건</td></tr>
+      <tr><td>업종</td><td>아니오</td><td>주어지면 업종별 규제를 더 점검</td></tr>
+      <tr><td>사용자 자료</td><td>아니오</td><td>소개서, 후기, 인터뷰. 승인된 고객의 말은 원문 그대로 후보에 오릅니다</td></tr>
+    </tbody>
+  </table></div>
+  <h3>산출물</h3>
+  <p>작업 폴더 아래 <code>copy-runs/&lt;브랜드&gt;/&lt;날짜&gt;-&lt;주제&gt;/</code>에 단계마다 파일이 하나씩 쌓입니다. 끝나면 최종 줄과 대안 둘, 플래너의 재정의, 단계별 줄 수, 사실·규제 검수에서 걸린 줄과 의뢰인 확인 항목을 보고합니다. 같은 브랜드로 다시 돌리면 <code>learning-log.md</code>의 교훈을 먼저 알려 줍니다.</p>
+  <h3>시간과 비용</h3>
+  <p>시연 기준으로 하위 에이전트 13개가 돌았고, 팀 셋을 차례로 돌려 20분 안팎(에이전트 실행 시간 합계 약 19분)이 걸렸습니다. 하위 에이전트가 쓴 토큰은 합쳐서 약 104만이었습니다. 한 줄 카피를 빨리 받고 싶을 때보다, 과정을 따라가 보고 싶거나 사실 검수가 중요한 광고에 맞습니다.</p>
+</section>
+
+<section class="stack" id="demo" aria-labelledby="h-demo">
+  <span class="eyebrow">시연</span>
+  <h2 id="h-demo">가상 제품 고요베개로 한 번 돌린 기록</h2>
+  <div class="demo">
+    <div class="stack">
+      <span class="eyebrow">광고주 최종</span>
+      <span class="q">“남편이 처음으로 제가 먼저 잠들었대요”</span>
+      <span class="muted" style="font-size:.85rem">승인된 구매자 후기 원문. 대안은 변론으로 살아난 "각방 얘기는 30일 뒤에 해도 늦지 않아요."와 팀 B의 작동 장면 줄.</span>
+    </div>
+    <div class="stack">
+      <p style="font-size:.93rem">플래너는 말할 상대를 코 고는 사람에서 옆에서 깨어 있는 배우자로 바꿨습니다. CD는 첫 브리프를 한 번 돌려보냈습니다. 세 팀이 낸 루트 15개, 99줄의 판정과 이유를 모두 볼 수 있습니다.</p>
+      <a class="btn" href="demo/">시연 기록 보기</a>
+    </div>
+  </div>
+</section>
+
+<section class="stack" id="limits" aria-labelledby="h-limits">
+  <span class="eyebrow">한계</span>
+  <h2 id="h-limits">단일 프롬프트보다 낫다는 근거는 없습니다</h2>
+  <ul class="plain">
+    <li>같은 원자료를 받은 단일 프롬프트와 최종 줄을 비교한 시험에서, 이 스킬의 승률은 평균 0.37이었습니다. 결과는 단일 프롬프트보다 대체로 못하거나 비슷하다고 봅니다.</li>
+    <li>쓸 이유는 과정에 있습니다. 업계 흐름을 단계별로 따라가 볼 수 있고, 브리프 대조와 광고주 검수가 단일 프롬프트에서 되풀이된 사실 오류(근거 없는 효능, 승인받은 고객 말의 임의 수정)를 막습니다.</li>
+    <li>CD와 광고주도 같은 모델입니다. 모델 판정은 독창성과 놀라움에서 사람과 잘 맞지 않는다는 연구가 있습니다. 같은 풀로 다시 돌려도 최종 줄이 크게 달라집니다.</li>
+    <li>결과물은 헤드라인 줄입니다. 실무의 단위인 그림과 함께인 루트, 서브 카피, 본문은 이 스킬 밖에 있습니다.</li>
+    <li>재료는 웹 원문과 사용자 자료뿐입니다. 시연, 포커스 그룹, 회의실의 한마디에서 나오는 재정의는 흉내 낼 수 없습니다.</li>
+  </ul>
+</section>
+
+<footer>
+  <p>copy-masters는 v1~v4에서 대가(Ogilvy, Bernbach, 다니야마, 정철)의 방식을 옮기던 때 붙은 이름입니다. v5는 그 구조를 내리고 대행사 작업 흐름을 따릅니다. 설계 근거는 잘 알려진 광고 25편의 제작 기록과 Turnbull &amp; Wheeler의 대행사 연구에서 가져왔습니다. <a href="https://github.com/5hyuns/ad-copy-agency-skill">GitHub 저장소</a></p>
+</footer>
+</div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var el = document.getElementById(b.dataset.copy), text = el.textContent;
+    function done(ok) { b.textContent = ok ? '복사됨' : '선택됨'; setTimeout(function () { b.textContent = '복사'; }, 1500); }
+    function select() { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); done(false); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, select); else select();
+  });
+});
+</script>
+</body>
+</html>

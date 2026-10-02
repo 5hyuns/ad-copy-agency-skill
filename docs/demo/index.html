@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>고요베개 카피 실행</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 한 줄 기둥: 최종 줄을 피드 카드로 먼저 보이고, 그 아래로 단계 순서대로 내려간다 */
+:root {
+  --bg: #f3f4f7; --surface: #ffffff; --ink: #1d2230; --muted: #5d6476; --line: #dde0e8;
+  --accent: #3b4f8f; --accent-soft: #e4e8f4; --keep: #2f6b4f; --keep-soft: #e1efe7;
+  --cut: #8a8f9c; --warn: #8a5a12; --warn-soft: #f6ecd9; --night: #1b2140; --night-ink: #eef0f8;
+  --display: "Hahmlet", "Nanum Myeongjo", serif;
+  --body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151d; --surface: #1a1e29; --ink: #e6e8ef; --muted: #9aa1b3; --line: #2b3040;
+  --accent: #9fb1ea; --accent-soft: #252c45; --keep: #8fd0ae; --keep-soft: #1d3329;
+  --cut: #6f7586; --warn: #e2b46a; --warn-soft: #3a2e1a; --night: #0b0e1a; --night-ink: #eef0f8; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12151d; --surface: #1a1e29; --ink: #e6e8ef; --muted: #9aa1b3; --line: #2b3040;
+  --accent: #9fb1ea; --accent-soft: #252c45; --keep: #8fd0ae; --keep-soft: #1d3329;
+  --cut: #6f7586; --warn: #e2b46a; --warn-soft: #3a2e1a; --night: #0b0e1a; --night-ink: #eef0f8; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.7 var(--body); padding-inline: 16px; padding-block: 32px 64px }
+.wrap { max-width: 920px; margin: 0 auto; display: grid; gap: 48px }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.35 }
+h1 { font-size: 1.9rem } h2 { font-size: 1.35rem } h3 { font-size: 1.05rem }
+p { margin: 0; max-width: 65ch }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; color: var(--muted); font-weight: 600 }
+.stack { display: grid; gap: 14px; min-width: 0 }
+.muted { color: var(--muted) }
+header.top { display: grid; gap: 10px }
+.hero { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 32px; align-items: start }
+@media (max-width: 720px) { .hero { grid-template-columns: 1fr } }
+.post { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; max-width: 100% }
+.post-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: .85rem }
+.avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--night); color: var(--night-ink); display: grid; place-items: center; font-size: .7rem; font-weight: 600 }
+.post-img { aspect-ratio: 4 / 5; max-width: 100%; background: radial-gradient(120% 80% at 70% 15%, #3a4680 0%, var(--night) 60%); color: var(--night-ink); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; gap: 14px }
+.post-img .quote { font-family: var(--display); font-size: 1.45rem; line-height: 1.45; font-weight: 700 }
+.post-img .src { font-size: .72rem; opacity: .75 }
+.post-cta { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; font-size: .85rem; border-top: 1px solid var(--line) }
+.post-cta b { color: var(--accent) }
+.post-foot { padding: 4px 12px 12px; font-size: .72rem; color: var(--muted) }
+.alts { display: grid; gap: 12px }
+.alt { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 4px }
+.alt .h { font-family: var(--display); font-size: 1.1rem; font-weight: 700 }
+.tag { display: inline-block; font-size: .72rem; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; width: fit-content }
+.confirm { background: var(--warn-soft); color: var(--warn); font-size: .82rem; padding: 8px 10px; border-radius: 6px }
+.funnel { display: grid; gap: 8px }
+.frow { display: grid; grid-template-columns: 9.5em 1fr 3em; gap: 10px; align-items: center; font-size: .88rem }
+.bar { height: 14px; background: var(--accent); border-radius: 3px; min-width: 3px }
+.frow .n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600 }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 12px; min-width: 0 }
+.big { font-family: var(--display); font-size: 1.2rem; font-weight: 700 }
+blockquote { margin: 0; padding-left: 14px; border-left: 2px solid var(--line); color: var(--muted); font-size: .9rem }
+ol.fix { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; font-size: .9rem }
+.routes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px }
+@media (max-width: 760px) { .routes { grid-template-columns: 1fr } }
+.team { display: grid; gap: 8px; align-content: start }
+.route { font-size: .88rem; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); display: grid; gap: 4px }
+.route.alive { border-color: var(--keep); background: var(--keep-soft) }
+.route .rid { font-size: .72rem; font-weight: 600; color: var(--muted) }
+.route.alive .rid { color: var(--keep) }
+.route .fb { font-size: .8rem; color: var(--muted) }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap }
+.tabs button, .chips button { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 5px 12px; border-radius: 999px; cursor: pointer }
+.tabs button[aria-selected="true"], .chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink) }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center }
+.chips .lbl { font-size: .75rem; color: var(--muted); margin-right: 2px }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface) }
+table { border-collapse: collapse; width: 100%; font-size: .86rem }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-size: .72rem; color: var(--muted); font-weight: 600; letter-spacing: .04em; white-space: nowrap }
+td.id { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap }
+td.hl { font-weight: 500; min-width: 16em }
+tr.cut td.hl { color: var(--cut) }
+.v { font-size: .72rem; font-weight: 600; padding: 1px 7px; border-radius: 4px; white-space: nowrap }
+.v.keep { background: var(--keep-soft); color: var(--keep) }
+.v.cut { background: transparent; color: var(--cut); border: 1px solid var(--line) }
+.v.cand { background: var(--accent-soft); color: var(--accent) }
+.why { color: var(--muted); font-size: .8rem }
+.def { display: block; margin-top: 4px; font-size: .78rem; color: var(--warn) }
+.count { font-size: .8rem; color: var(--muted) }
+.notes { display: grid; gap: 10px; font-size: .92rem }
+.notes p { max-width: 70ch }
+@media (prefers-reduced-motion: no-preference) { .bar { transition: width .3s } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a href="../" class="eyebrow" style="color:var(--accent)">← ad-copy-agency-skill</a>
+  <span class="eyebrow">COPY-MASTERS v5 시연 · 2026-10-02 · 가상 제품</span>
+  <h1>누움랩 고요베개, 인스타그램 피드 헤드라인</h1>
+  <p class="muted">코골이를 감지하면 공기주머니가 부풀어 머리 각도를 바꿔 주는 스마트 베개. 퍼포먼스 모드, 사업 목표는 30일 체험 주문. 브리프부터 광고주 선택까지 역할별 에이전트가 차례로 돌았다.</p>
+</header>
+
+<section class="hero">
+  <div class="post" aria-label="최종 줄을 피드 광고로 놓아 본 모습">
+    <div class="post-head"><span class="avatar">누움</span><span><b>nuumlab</b><br><span class="muted" style="font-size:.72rem">광고</span></span></div>
+    <div class="post-img">
+      <div class="quote">“남편이 처음으로 제가 먼저 잠들었대요”</div>
+      <div class="src">고요베개 구매자 후기 · 개인의 경험이며 사람마다 다를 수 있음 · 의료기기 아님</div>
+    </div>
+    <div class="post-cta"><span>30일 체험 신청</span><b>›</b></div>
+    <div class="post-foot">피드 카드는 줄을 놓아 본 견본이다. 그림과 하단 문구는 스킬 산출물이 아니다.</div>
+  </div>
+  <div class="stack">
+    <span class="eyebrow">광고주 최종</span>
+    <h2>“남편이 처음으로 제가 먼저 잠들었대요”</h2>
+    <span class="tag">승인된 고객 후기 원문</span>
+    <p>주문 버튼을 누르는 사람은 옆에서 깨어 있는 배우자인데, 이 줄은 그 사람이 얻는 것(먼저 잠드는 밤)을 실제 구매자의 말 그대로 보여 준다. 피드에서 같은 처지의 사람을 멈춰 세우는 힘이 가장 크고, 코 고는 사람을 탓하지 않으며, 체험 주문은 CTA로 바로 이으면 된다. 집행 때 &quot;구매자 후기&quot; 표기와 &quot;개인의 경험이며 효과는 사람마다 다를 수 있음&quot;을 함께 두고, 화면 안에 &quot;의료기기 아님&quot;을 넣는다.</p>
+    <div class="confirm">의뢰인 확인 필요: V1 작성자의 광고 사용 동의 범위, 후기 작성에 대가나 할인 등 경제적 이해관계가 있었는지(CD 설명의 &quot;대가 없음, 체험단 아님&quot;은 원자료에 없음)</div>
+    <div class="alts">
+<div class="alt"><span class="eyebrow">대안</span><span class="h">각방 얘기는 30일 뒤에 해도 늦지 않아요.</span>
+      <span class="tag">팀 B · B5 · 변론으로 부활</span><p class="why" style="font-size:.85rem">사업 목표인 30일 체험 주문에 가장 직접 닿는 줄이다. 각방을 고민하는 지금 결정을 미루고 먼저 써 볼 이유를 주므로, 후기 쪽 소재가 피로해질 때 바꿔 걸 전환용으로 좋다. 서브에서 30일 체험 조건을 함께 적어야 한다.</p>
+      <div class="confirm">의뢰인 확인 필요: 30일 체험 기간의 시작일, 반품 배송비 부담, 사용·세탁한 제품도 반품 받는지, 환불 기간</div></div>
+<div class="alt"><span class="eyebrow">대안</span><span class="h">밤마다 팔꿈치가 하던 일, 이제 베개가 고개 각도로 합니다.</span>
+      <span class="tag">팀 B · B3 · 재작업</span><p class="why" style="font-size:.85rem">처음 보는 사람에게 이 베개가 무엇을 하는지(F1)를 장면 하나로 알려 줘, &quot;베개가 고개 각도를 바꿔 주는 방법이 있구나&quot;라는 브리프의 바라는 반응에 바로 닿는다. 서브에서 코골이가 멈춘다는 약속으로 넘어가지 않게 하고 &quot;의료기기 아님&quot;을 넣는다.</p>
+      <div class="confirm">의뢰인 확인 필요: 작동 때 소음과 잠 깸 여부(서브에서 &quot;조용히&quot;, &quot;깨우지 않고&quot;를 쓰려면 필요)</div></div>
+</div></div></section>
+<section class="stack"><span class="eyebrow">줄 수의 흐름</span><h2>99줄에서 3줄까지</h2><div class="funnel">
+<div class="frow"><span>1차 줄 (3팀)</span><div class="bar" style="width:100.0%"></div><span class="n">99</span></div>
+<div class="frow"><span>CD 1차 살림</span><div class="bar" style="width:18.2%"></div><span class="n">18</span></div>
+<div class="frow"><span>CD 2차 풀</span><div class="bar" style="width:56.6%"></div><span class="n">56</span></div>
+<div class="frow"><span>CD 후보</span><div class="bar" style="width:5.1%"></div><span class="n">5</span></div>
+<div class="frow"><span>광고주 선택</span><div class="bar" style="width:3.0%"></div><span class="n">3</span></div>
+</div><p class="muted" style="font-size:.85rem">CD 1차는 루트 15개 가운데 4개를 살렸다. 2차 풀 56줄은 1차 생존 18, 재작업 33, 변론 3, 승인된 고객 후기 원문 2로 이뤄졌다. 평균 글자 수는 1차 24.7자, 광고주 선택 25.7자로 길이 쪽 치우침은 없었다. 과정 점검 46항목 중 어긋남 0.</p></section>
+<section class="stack"><span class="eyebrow">플래너와 CD 서저리</span><h2>말할 상대를 옆에서 깨어 있는 사람으로 바꿨다</h2>
+<div class="panel">
+  <span class="eyebrow">다시 정의한 과제 · 말 상대 바꾸기</span>
+  <p>클라이언트 브리프는 코 고는 사람을 상대로 잡았지만, 원자료에서 밤마다 깨어 있는 사람도, 아침에 베개를 주문하는 사람도 옆에서 자는 사람인 경우가 많다. 이 광고는 옆에서 깨어 있는 사람에게, 상대를 깨우거나 방을 나가는 것 말고 베개를 바꿔 보는 방법이 있다는 걸 말해야 한다.</p>
+  
+  <span class="eyebrow" style="margin-top:8px">단일 제안 (서저리 뒤 고친 판)</span>
+  <p class="big">베개 하나 바꾸면, 옆에서 깨어 있던 사람이 먼저 잠들 수 있다.</p>
+  <p class="muted" style="font-size:.85rem">이 문장의 근거는 사용 승인을 받은 구매자 후기 V1이다. 측정된 효과가 아니라 한 사람의 경험이므로, 팀은 이 생각을 약속이 아니라 그런 밤이 있었다는 장면으로 다룬다. 작동 방식은 믿을 이유로, 30일 체험은 행동 유도로 둔다. 셋을 한 문장에 묶지 않는다.</p>
+</div>
+<div class="panel">
+  <span class="eyebrow">CD 서저리 · 돌려보냄 1회</span>
+  <p style="font-size:.9rem">재정의(말 상대를 옆에서 깨어 있는 사람으로 바꾸기)는 원자료 V35·V6·V43이 받쳐 주고 30일 체험 주문이라는 사업 목표로도 이어진다. 날것 재료도 원문 그대로다. 그런데 단일 제안 한 문장에 작동 방식, 옆사람이 먼저 잠드는 것, 무료 반품 체험이라는 세 가지 생각이 들어 있다. 게다가 그중 두 가지는 이 브리프의 믿을 이유와 필수 사항이 아직 쓰지 말라고 막아 둔 말이다.</p>
+  <ol class="fix"><li>단일 제안을 한 가지 생각으로 줄였다. 이전 문장은 작동 방식, 옆사람이 먼저 잠드는 것, 30일 무료 반품을 한 문장에 묶었다(CD 의견 1). 재정의가 옆사람을 상대로 잡았으니 중심은 그 사람이 얻는 것, 곧 &quot;먼저 잠들 수 있다&quot;로 두었다. 작동 방식은 믿을 이유로, 체험은 행동 유도로 옮겼다. &#x27;택하지 않은 재정의&#x27;에서 체험 조건은 주인공이 될 수 없다고 한 판단과 이제 맞는다. 이 생각이 V1 한 사람의 후기에서 왔다는 점은 단일 제안 아래에 적어, 팀이 약속처럼 쓰지 않게 했다.</li><li>&quot;깨우지 않고&quot;를 뺐다(CD 의견 2). F1에는 &quot;천천히 부풀어 머리 각도를 바꿔 준다&quot;까지만 있다. 믿을 이유와 필수 사항에 확인 전에는 &quot;깨우지 않는다&quot;, &quot;조용하다&quot;를 쓰지 않는다고 적었고, 톤의 &quot;살짝 돌려 준다&quot;도 F1에 맞춰 &quot;각도를 바꿔 준다&quot;로 고쳤다.</li><li>&quot;아니면 무료로 돌려보내면 된다&quot;를 단일 제안과 &#x27;바라는 반응&#x27;에서 뺐다(CD 의견 3). &#x27;생각할 것&#x27;에는 세부 조건 없이 &quot;30일 써 볼 수 있다&quot;만 남겼다. 30일 체험은 의뢰인이 준 사실(F3)이고 행동 유도의 이름이라 그 자체까지 막지는 않았다. 필수 사항에 이 구분을 적었다.</li><li>코 고는 본인에 대한 일반화를 고쳤다(CD 의견 4). &quot;코 고는 본인은 대개 잘 자고&quot;를 지우고, 재정의 근거에서 V37을 단독 근거로 쓰지 않았다. V37·V38처럼 본인은 잘 자면서도 해결책을 직접 찾아 써 본 사람, V11·V12처럼 자기 잠 때문에 직접 산 사람이 있다는 것을 &#x27;다시 정의한 과제&#x27;와 &#x27;누구에게&#x27;의 두 번째 독자 설명에 넣었다. 주 구매자를 옆사람으로 보는 정의는 V35·V6·V3·V43·F19가 받치므로 유지했다. 다만 &quot;원자료에서 많다&quot;는 정도로 말을 줄였다.</li></ol>
+</div></section>
+<section class="stack"><span class="eyebrow">팀 아이데이션 · 차례 실행</span><h2>세 팀이 연 루트 15개, CD가 살린 4개</h2><p class="muted" style="font-size:.88rem">팀 B는 팀 A의 루트를, 팀 C는 A와 B의 루트를 "이미 나온 길"로 받고 다른 길을 찾았다. 초록 테두리가 CD 1차에서 살아남은 루트이고, 아래 작은 글씨가 CD가 팀에게 준 피드백이다.</p><div class="routes">
+<div class="team"><h3>팀 A</h3>
+<div class="route alive"><span class="rid">A1 · 살림</span><span>밤마다 옆사람이 팔꿈치로 하던 일을 베개가 넘겨받는다.</span><span class="fb">베개가 넘겨받는 것은 고개 각도까지다. 몸을 돌려 눕힌다고 하면 F1을 넘는다. 손일을 그만두는 밤이 약속으로 읽히지 않게 할 길을 찾고, 이 손일이 옆사람에게 어떤 기분이었는지(미안함, 지침)까지 더 파라.</span></div>
+<div class="route"><span class="rid">A2</span><span>방을 나가기 전에 베개를 바꿔 보는 방법이 있다.</span></div>
+<div class="route alive"><span class="rid">A3 · 살림</span><span>늘 깨어 있던 사람이 먼저 잠드는 밤이 있었다.</span><span class="fb">약속이 아니라 그런 밤이 있었다는 장면으로 다루라는 브리프의 선을 지켜라. &quot;당신 차례&quot; 식으로 미래를 보장하는 순간 무너진다. 순서가 바뀐 밤에 두 사람에게 무엇이 달라졌는지, 특히 이번엔 그 사람이 내 자는 얼굴을 보는 쪽 같은 뒤집힘을 더 파라.</span></div>
+<div class="route"><span class="rid">A4</span><span>탓하는 말 대신 선물로 내밀 수 있다.</span></div>
+<div class="route"><span class="rid">A5</span><span>귀마개를 종류별로 사 본 사람에게, 귀가 아니라 고개 쪽을 바꾸는 방법.</span></div>
+</div>
+<div class="team"><h3>팀 B</h3>
+<div class="route"><span class="rid">B1</span><span>밤에 있었던 일을 아침에 말로 다투지 않고 앱 기록으로 둘이 같이 본다.</span></div>
+<div class="route"><span class="rid">B2</span><span>옆자리에서 빠져나간 잠은 다음 날 낮에 티가 난다. 밤을 바꾸면 낮이 달라진다.</span></div>
+<div class="route alive"><span class="rid">B3 · 살림</span><span>사람을 고치라고 할 필요 없이, 그 사람은 그대로 두고 베개만 바꾼다.</span><span class="fb">이 루트의 죽은 줄은 대부분 &quot;그 사람은 안 바뀐다&quot;는 말이 곧 그 사람이 문제라는 말로 미끄러져서 죽었다. 습관, 약속, 바꾸기 어렵다는 말 없이 사람을 그대로 두는 따뜻함이 어디서 오는지 파라. 남편으로 성별을 못 박지 않는다.</span></div>
+<div class="route"><span class="rid">B4</span><span>코골이 옆에서 자는 사람끼리만 아는 밤이 있다. 참고 사는 게 답은 아니다.</span></div>
+<div class="route"><span class="rid">B5</span><span>30일 동안 누가 먼저 잠드는지 둘이 지켜보는 내기처럼 써 본다.</span></div>
+</div>
+<div class="team"><h3>팀 C</h3>
+<div class="route"><span class="rid">C1</span><span>이미 방을 나간 사람에게, 다시 같은 방으로 돌아오는 밤이 있다.</span></div>
+<div class="route alive"><span class="rid">C2 · 살림</span><span>옆사람은 밤새 듣는 사람이 되어 버렸다. 그 듣는 일을 내려놓게 한다.</span><span class="fb">지금 줄들은 듣는 고통까지만 가고 베개로 넘어가는 다리가 없다. 듣는 일을 내려놓는다는 게 소리가 안 들린다는 약속이 되면 안 되니(조용하다는 확인 전), 무엇을 내려놓는지 다시 파라. 소리가 멈출 때 귀를 세우는 장면은 수면무호흡 쪽으로 읽히니 그 근처는 피한다.</span></div>
+<div class="route"><span class="rid">C3</span><span>밤 전체가 바뀌는 데 필요한 변화는 고개 각도 하나만큼 작다.</span></div>
+<div class="route"><span class="rid">C4</span><span>자는 동안 생긴 일은 누구 잘못도 아니니, 자는 동안 베개가 맡는다.</span></div>
+<div class="route"><span class="rid">C5</span><span>옆사람은 밤마다 시계를 보는 사람이다. 시계를 안 보고 잠드는 밤이 있다.</span></div>
+</div>
+</div></section>
+<section class="stack"><span class="eyebrow">모든 줄과 CD 판정</span><h2>줄 목록</h2>
+<div class="tabs" role="tablist">
+  <button role="tab" id="tab1" aria-selected="true" data-tab="1">CD 1차 · 99줄</button>
+  <button role="tab" id="tab2" aria-selected="false" data-tab="2">CD 2차 · 56줄</button>
+</div>
+<div class="chips" id="fteam"><span class="lbl">팀</span></div>
+<div class="chips" id="fv"><span class="lbl">판정</span></div>
+<span class="count" id="count"></span>
+<div class="tbl"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+</section>
+<section class="stack"><span class="eyebrow">광고주의 사실·규제 검수</span><h2>걸린 줄 0, 확인할 것 3</h2>
+<div class="notes">
+<p>다섯 후보 모두 의뢰인이 준 제품 사실 밖의 주장을 하지 않았고, 치료·호흡·기도처럼 의료기기로 읽힐 말도 없었다. 참고로 걸리지는 않았지만 본 점: M032의 &quot;팔꿈치가 하던 일&quot;은 코골이를 멈추게 한다는 효과로 읽힐 여지가 있다. 헤드라인이 말하는 것은 F1의 작동(고개 각도를 바꿔 줌)까지라 문제로 두지 않았고, 서브에서 효과를 약속하지 않으면 된다. M003·M037에는 제품 사실 주장이 없다.</p>
+<p>확인 항목 하나는 스킬의 빈틈에서 나왔다. 사용자 자료에는 두 후기가 "대가 없는, 체험단 아닌 구매자"의 말이라고 적혀 있었는데, 원자료 수집 에이전트가 이를 02-raw.md로 옮기며 "승인된 구매자 후기"로만 적었다. 광고주는 원자료에서 대가 여부를 찾지 못해 확인 필요로 표시했다.</p>
+</div></section>
+<section class="stack"><span class="eyebrow">이번 실행에서 본 것</span><h2>최종은 다시 고객 말 원문이었다</h2>
+<div class="notes">
+<p>지난 시험들처럼 최종 줄은 팀이 쓴 줄이 아니라 승인된 고객 후기를 그대로 옮긴 줄이었다. 두 번째 후기 "각방 쓴 지 2년 만에 다시 같은 방에서 잡니다"는 CD 2차에서 빠졌다.</p>
+<p>사내 시험 41% 수치를 쓴 줄은 후보에 하나도 없었다. 플래너가 의뢰인 자료에 "가상"으로 적힌 것을 보고 확인 전에는 쓰지 말라고 막았기 때문이다.</p>
+<p>대안 "각방 얘기는 30일 뒤에 해도 늦지 않아요."는 CD 1차에서 루트째 떨어졌다가 팀 B의 변론으로 돌아왔다. 변론 세 건 가운데 두 건이 받아들여졌다.</p>
+<p>단일 프롬프트와 비교하지 않은 한 번의 실행이라 결과의 우열은 말할 수 없다. </p>
+</div></section>
+</div>
+<script>const D={"l1": [{"id": "L001", "team": "C", "route": "C3", "text": "밤이 바뀌는 데 필요한 건 고개 각도 하나였다.", "v": "죽임", "why": "작동이 주인공, 경쟁 기술 말과 겹침"}, {"id": "L002", "team": "C", "route": "C3", "text": "큰 결심 말고, 고개가 조금 돌아가는 일.", "v": "죽임", "why": "작동이 주인공, 발견 없음"}, {"id": "L003", "team": "C", "route": "C3", "text": "각방보다 훨씬 작은 변화, 고개 각도.", "v": "죽임", "why": "작동이 주인공, 각방 소재 붐빔"}, {"id": "L004", "team": "C", "route": "C3", "text": "베개가 고개 각도를 바꾸는 사이, 옆사람이 잠든다.", "v": "죽임", "why": "루트 미선정, 작동 설명 중심"}, {"id": "L005", "team": "C", "route": "C3", "text": "밤 전체를 바꾸려던 사람에게, 고개 하나만.", "v": "죽임", "why": "작동이 주인공, 받는 사람 흐림"}, {"id": "L006", "team": "C", "route": "C3", "text": "베개 속 공기가 차오르면, 고개가 옆으로 돌아간다.", "v": "죽임", "why": "작동 설명뿐, 옆사람 빠짐"}, {"id": "L007", "team": "C", "route": "C3", "text": "이 문제는 생각보다 작은 데서 풀릴 수도 있다.", "v": "죽임", "why": "누구 얘기인지 없음"}, {"id": "L008", "team": "B", "route": "B2", "text": "오후 세 시의 하품은 어젯밤 옆자리에서 시작됐다.", "v": "죽임", "why": "낮 피로로 빠짐, 브리프 반응과 멂"}, {"id": "L009", "team": "B", "route": "B2", "text": "커피를 한 잔 더 시키는 이유가 옆에서 코를 곱니다.", "v": "죽임", "why": "코 고는 쪽 탓으로 읽힘"}, {"id": "L010", "team": "B", "route": "B2", "text": "회의 중에 졸린 건 회의 탓이 아닐 수도 있어요.", "v": "죽임", "why": "낮 피로로 빠짐, 흔한 수면 광고 자리"}, {"id": "L011", "team": "B", "route": "B2", "text": "출근길 지하철에서야 겨우 잠드는 사람에게.", "v": "죽임", "why": "낮 피로로 빠짐"}, {"id": "L012", "team": "B", "route": "B2", "text": "낮에 모자란 잠은 밤에 옆자리로 새어 나갔습니다.", "v": "죽임", "why": "낮 피로로 빠짐"}, {"id": "L013", "team": "B", "route": "B2", "text": "잠은 밤에, 내 침대에서 자고 싶은 사람에게.", "v": "죽임", "why": "낮 피로 루트 미선정"}, {"id": "L014", "team": "B", "route": "B2", "text": "아이 재우다 같이 잠든 십 분이 제일 푹 잔 잠이라면.", "v": "죽임", "why": "육아 피로로 번짐, 코골이와 멂"}, {"id": "L015", "team": "C", "route": "C2", "text": "다음 코골이까지 몇 초 남았는지 세고 있는 당신에게.", "v": "살림", "why": ""}, {"id": "L016", "team": "C", "route": "C2", "text": "숨 고르는 그 짧은 틈에 잠들어 보려고 애쓴 적 있다면.", "v": "살림", "why": ""}, {"id": "L017", "team": "C", "route": "C2", "text": "그 사람 코 고는 박자를 좋아하는 노래보다 잘 아는 사람.", "v": "살림", "why": ""}, {"id": "L018", "team": "C", "route": "C2", "text": "소리가 멈추면 오히려 귀를 세우게 되던 밤.", "v": "죽임", "why": "수면무호흡 연상"}, {"id": "L019", "team": "C", "route": "C2", "text": "밤새 듣는 사람과 밤새 모르는 사람이 한 침대에 있다.", "v": "살림", "why": ""}, {"id": "L020", "team": "C", "route": "C2", "text": "이제 그만 들어도 되는 사람이 되는 밤.", "v": "죽임", "why": "소리 안 들림을 약속"}, {"id": "L021", "team": "C", "route": "C2", "text": "잠들기 전에 귀부터 먼저 지쳐 버리는 사람에게.", "v": "살림", "why": ""}, {"id": "L022", "team": "A", "route": "A5", "text": "귀마개 서랍, 이제 그만 채워도 돼요.", "v": "죽임", "why": "루트 미선정, 대체품 비교에 머묾"}, {"id": "L023", "team": "A", "route": "A5", "text": "귀를 막는 대신, 고개 각도를 바꿉니다.", "v": "죽임", "why": "작동 비교, 발견 약함"}, {"id": "L024", "team": "A", "route": "A5", "text": "종류별로 다 사 본 귀마개 다음 차례.", "v": "죽임", "why": "루트 미선정, 대체품 비교"}, {"id": "L025", "team": "A", "route": "A5", "text": "귀마개, 팔꿈치, 각방. 그리고 베개.", "v": "죽임", "why": "브리프 목록 나열"}, {"id": "L026", "team": "A", "route": "A5", "text": "소리 줄이려고 귀를 막던 사람에게.", "v": "죽임", "why": "루트 미선정, 받는 사람 호명뿐"}, {"id": "L027", "team": "A", "route": "A5", "text": "귀마개 말고 베개로, 30일 써 보세요.", "v": "죽임", "why": "루트 미선정, 체험 권유뿐"}, {"id": "L028", "team": "A", "route": "A3", "text": "\"남편이 처음으로 제가 먼저 잠들었대요.\"", "v": "살림", "why": ""}, {"id": "L029", "team": "A", "route": "A3", "text": "오늘은 당신이 먼저 잠들 차례.", "v": "죽임", "why": "단일 제안을 약속으로 씀"}, {"id": "L030", "team": "A", "route": "A3", "text": "늘 듣기만 하던 사람이 먼저 잠든 밤.", "v": "살림", "why": ""}, {"id": "L031", "team": "A", "route": "A3", "text": "먼저 잠들려고 서두르던 밤, 기억나세요?", "v": "살림", "why": ""}, {"id": "L032", "team": "A", "route": "A3", "text": "귀 기울이던 밤에서, 눈 감는 밤으로.", "v": "죽임", "why": "전후 대비 약속, 발견 없음"}, {"id": "L033", "team": "A", "route": "A3", "text": "베개 하나 바꿨더니 잠드는 순서가 바뀌었대요.", "v": "살림", "why": ""}, {"id": "L034", "team": "A", "route": "A3", "text": "이번엔 그 사람이 당신 자는 얼굴을 볼 차례.", "v": "살림", "why": ""}, {"id": "L035", "team": "B", "route": "B4", "text": "코골이 옆에서 자 본 사람끼리는 설명이 필요 없죠.", "v": "죽임", "why": "공감뿐, 해법 연결 없음"}, {"id": "L036", "team": "B", "route": "B4", "text": "\"너희 집도 그래?\"라고 묻고 싶어지는 새벽.", "v": "죽임", "why": "루트 미선정, 공감뿐"}, {"id": "L037", "team": "B", "route": "B4", "text": "친구가 \"우리 남편도\"라고 할 때 웃기만 했던 사람에게.", "v": "죽임", "why": "루트 미선정, 공감뿐"}, {"id": "L038", "team": "B", "route": "B4", "text": "다들 참고 산다길래, 참았습니다.", "v": "죽임", "why": "루트 미선정, 해법 연결 없음"}, {"id": "L039", "team": "B", "route": "B4", "text": "참는 게 답인 줄 알았던 사람들에게.", "v": "죽임", "why": "공감뿐, 해법 연결 없음"}, {"id": "L040", "team": "B", "route": "B4", "text": "이 밤이 우리 집만의 일이 아니었어요.", "v": "죽임", "why": "공감뿐, 관점 흔함"}, {"id": "L041", "team": "B", "route": "B3", "text": "남편은 그대로 두고, 베개만 바꿉니다.", "v": "죽임", "why": "성별 못 박음"}, {"id": "L042", "team": "B", "route": "B3", "text": "사람을 바꾸기는 어렵습니다. 베개는 쉽습니다.", "v": "죽임", "why": "사람을 문제로 둠"}, {"id": "L043", "team": "B", "route": "B3", "text": "결혼할 때 코골이까지 약속하진 않았지만, 베개는 바꿀 수 있어요.", "v": "죽임", "why": "코 고는 쪽 탓으로 읽힘"}, {"id": "L044", "team": "B", "route": "B3", "text": "그 사람 습관은 못 고쳐도, 고개 각도는 바뀝니다.", "v": "죽임", "why": "코골이를 습관 탓으로 봄"}, {"id": "L045", "team": "B", "route": "B3", "text": "십오 년째 같은 사람, 처음 바꿔 보는 베개.", "v": "살림", "why": ""}, {"id": "L046", "team": "B", "route": "B3", "text": "고쳐 달라고 할 사람 대신, 바꿔 볼 물건이 생겼습니다.", "v": "살림", "why": ""}, {"id": "L047", "team": "B", "route": "B3", "text": "침대도 사람도 그대로. 고개 각도만 달라집니다.", "v": "살림", "why": ""}, {"id": "L048", "team": "C", "route": "C4", "text": "자는 동안 생긴 일은 자는 동안 풀면 된다.", "v": "죽임", "why": "루트 미선정, R07과 같은 자리"}, {"id": "L049", "team": "C", "route": "C4", "text": "코골이는 그 사람이 고른 게 아니다. 베개는 당신이 고를 수 있다.", "v": "죽임", "why": "루트 미선정, R07과 같은 자리"}, {"id": "L050", "team": "C", "route": "C4", "text": "둘 다 잠든 사이에 일어나는 일이라, 누구도 잘못한 게 없다.", "v": "죽임", "why": "루트 미선정, 해법 연결 없음"}, {"id": "L051", "team": "C", "route": "C4", "text": "본인은 모르는 소리, 베개는 알아듣는 소리.", "v": "죽임", "why": "루트 미선정, 작동 쪽으로 샘"}, {"id": "L052", "team": "C", "route": "C4", "text": "밤에 생긴 일로 아침에 미안해하지 않아도 되게.", "v": "죽임", "why": "루트 미선정, R07과 같은 자리"}, {"id": "L053", "team": "C", "route": "C4", "text": "자는 동안의 일은 베개에게 맡겨 둔다.", "v": "죽임", "why": "루트 미선정, 받는 사람 흐림"}, {"id": "L054", "team": "A", "route": "A2", "text": "거실 소파 말고, 원래 자리에서.", "v": "죽임", "why": "각방 소재 붐빔, 루트 미선정"}, {"id": "L055", "team": "A", "route": "A2", "text": "베개 들고 나가기 전에, 베개를 바꿔 보세요.", "v": "죽임", "why": "브리프 재정의 문장 반복"}, {"id": "L056", "team": "A", "route": "A2", "text": "\"각방 쓴 지 2년 만에 다시 같은 방에서 잡니다.\"", "v": "죽임", "why": "각방 소재 붐빔, L083과 중복"}, {"id": "L057", "team": "A", "route": "A2", "text": "방을 나가는 건 맨 마지막에 해도 돼요.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L058", "team": "A", "route": "A2", "text": "문 닫고 나가기 전에, 30일만.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L059", "team": "A", "route": "A2", "text": "이불 들고 거실로 가던 밤, 그만 세어도 돼요.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L060", "team": "A", "route": "A2", "text": "같은 방에 남는 방법이 하나 더 있어요.", "v": "죽임", "why": "각방 소재 붐빔, 발견 없음"}, {"id": "L061", "team": "C", "route": "C5", "text": "새벽 2시 47분의 천장을 아는 사람에게.", "v": "죽임", "why": "R03과 같은 자리"}, {"id": "L062", "team": "C", "route": "C5", "text": "화면 밝기를 제일 낮추고 몇 시인지 확인하는 밤.", "v": "죽임", "why": "R03과 같은 자리"}, {"id": "L063", "team": "C", "route": "C5", "text": "오늘도 이 집에서 마지막으로 잠드는 사람.", "v": "죽임", "why": "R03과 같은 자리"}, {"id": "L064", "team": "C", "route": "C5", "text": "알람 울리기 직전에야 겨우 잠들던 사람에게.", "v": "죽임", "why": "R03과 같은 자리"}, {"id": "L065", "team": "C", "route": "C5", "text": "어젯밤 몇 시에 잠들었는지 기억나는 사람에게.", "v": "죽임", "why": "R03과 같은 자리"}, {"id": "L066", "team": "C", "route": "C5", "text": "시계를 한 번도 안 보고 잠드는 밤이 있다.", "v": "죽임", "why": "R03과 같은 자리, 약속 쪽"}, {"id": "L067", "team": "A", "route": "A4", "text": "생일선물이 베개인 이유는 말 안 해도 돼요.", "v": "죽임", "why": "선물은 행동 재료, 관점 아님"}, {"id": "L068", "team": "A", "route": "A4", "text": "\"당신 탓 아니야\" 대신 건네는 베개.", "v": "죽임", "why": "루트 미선정, R07과 같은 자리"}, {"id": "L069", "team": "A", "route": "A4", "text": "잔소리 대신 선물로.", "v": "죽임", "why": "잔소리 대비로 탓 연상"}, {"id": "L070", "team": "A", "route": "A4", "text": "코 곤다는 말 꺼내기 미안할 땐, 베개를 건네세요.", "v": "죽임", "why": "선물은 행동 재료, 관점 아님"}, {"id": "L071", "team": "A", "route": "A4", "text": "그 사람 잘못 아니에요. 베개를 바꿔 볼 차례예요.", "v": "죽임", "why": "루트 미선정, R07과 같은 자리"}, {"id": "L072", "team": "A", "route": "A4", "text": "몰아세우지 않고 내 밤을 찾는 방법.", "v": "죽임", "why": "브리프 문장 반복"}, {"id": "L073", "team": "B", "route": "B1", "text": "\"당신 어젯밤에 또\" 대신, 아침에 같이 보는 화면.", "v": "죽임", "why": "기록이 다툼 증거로 읽힘"}, {"id": "L074", "team": "B", "route": "B1", "text": "내 말 대신 기록이 말해 줍니다.", "v": "죽임", "why": "기록이 다툼 증거로 읽힘"}, {"id": "L075", "team": "B", "route": "B1", "text": "밤새 몇 번이었는지, 이제 아침에 둘이 같이 봅니다.", "v": "죽임", "why": "루트 미선정, 발견 약함"}, {"id": "L076", "team": "B", "route": "B1", "text": "억울한 쪽도, 잠 못 잔 쪽도 같은 화면을 봅니다.", "v": "죽임", "why": "루트 미선정, 공감 약함"}, {"id": "L077", "team": "B", "route": "B1", "text": "\"나 코 안 골았어\"에 대꾸하지 않아도 되는 아침.", "v": "죽임", "why": "코 고는 쪽 몰아세움"}, {"id": "L078", "team": "B", "route": "B1", "text": "몇 번 골았는지 세던 일은 베개에게 넘깁니다.", "v": "죽임", "why": "루트 미선정, 기록 기능 설명"}, {"id": "L079", "team": "B", "route": "B1", "text": "아침 식탁의 말다툼이 앱 기록 한 장으로 끝납니다.", "v": "죽임", "why": "기록이 다툼 증거로 읽힘"}, {"id": "L080", "team": "C", "route": "C1", "text": "거실 소파에 깔아 둔 이불, 이제 개어도 됩니다.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L081", "team": "C", "route": "C1", "text": "각방은 잠깐이라고 했는데, 그 잠깐이 몇 년이 됐다면.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L082", "team": "C", "route": "C1", "text": "다른 방으로 옮겼던 베개를 들고 다시 들어오는 밤.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L083", "team": "C", "route": "C1", "text": "\"각방 쓴 지 2년 만에 다시 같은 방에서 잡니다\"", "v": "죽임", "why": "각방 소재 붐빔, L056과 중복"}, {"id": "L084", "team": "C", "route": "C1", "text": "따로 자는 게 편해진 줄 알았는데, 지쳐서 그런 거였다.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L085", "team": "C", "route": "C1", "text": "돌아갈 방은 아직 거기 있다.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L086", "team": "C", "route": "C1", "text": "침대 한쪽이 비어 있는 게 익숙해지기 전에.", "v": "죽임", "why": "각방 소재 붐빔"}, {"id": "L087", "team": "B", "route": "B5", "text": "30일 동안, 누가 먼저 잠드는지 봅시다.", "v": "죽임", "why": "내기 구도가 둘을 맞세움"}, {"id": "L088", "team": "B", "route": "B5", "text": "오늘 밤부터 30일, 먼저 잠드는 쪽이 이깁니다.", "v": "죽임", "why": "내기 구도가 둘을 맞세움"}, {"id": "L089", "team": "B", "route": "B5", "text": "각방 얘기는 30일 뒤에 해도 늦지 않아요.", "v": "죽임", "why": "루트 미선정, 체험 권유뿐"}, {"id": "L090", "team": "B", "route": "B5", "text": "한 달만, 베개에게 맡겨 보세요.", "v": "죽임", "why": "체험 권유뿐, 받는 사람 흐림"}, {"id": "L091", "team": "B", "route": "B5", "text": "30일 동안 내가 먼저 잠든 밤이 며칠인지 세어 보세요.", "v": "죽임", "why": "루트 미선정, 체험 권유뿐"}, {"id": "L092", "team": "B", "route": "B5", "text": "이번 달 내기: 누가 먼저 잠드나.", "v": "죽임", "why": "내기 구도가 둘을 맞세움"}, {"id": "L093", "team": "A", "route": "A1", "text": "이제 팔꿈치는 쉬게 두세요.", "v": "살림", "why": ""}, {"id": "L094", "team": "A", "route": "A1", "text": "밤마다 그 사람 어깨를 밀던 손, 오늘은 베개에 맡겨요.", "v": "살림", "why": ""}, {"id": "L095", "team": "A", "route": "A1", "text": "돌려 눕히는 건 베개가 할게요.", "v": "죽임", "why": "F1을 넘는 작동"}, {"id": "L096", "team": "A", "route": "A1", "text": "\"자기야, 옆으로 좀…\" 오늘 밤엔 안 해도 돼요.", "v": "살림", "why": ""}, {"id": "L097", "team": "A", "route": "A1", "text": "당신이 밤새 하던 일을 베개가 넘겨받습니다.", "v": "살림", "why": ""}, {"id": "L098", "team": "A", "route": "A1", "text": "찌르지 않아도 되는 밤.", "v": "살림", "why": ""}, {"id": "L099", "team": "A", "route": "A1", "text": "코골이가 시작되면, 고개 각도는 베개가 바꿔요.", "v": "죽임", "why": "작동 설명, 옆사람 빠짐"}], "l2": [{"id": "M001", "team": "C", "route": "C2", "src": "1차 생존", "text": "다음 코골이까지 몇 초 남았는지 세고 있는 당신에게.", "v": "뺌", "why": "세는 사람을 정확히 알아보지만 줄이 알아봄에서 끝나 베개로 넘어가는 다리가 없다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M002", "team": "A", "route": "A3", "src": "1차 생존", "text": "먼저 잠들려고 서두르던 밤, 기억나세요?", "v": "뺌", "why": "알아봄에서 끝나고 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M003", "team": "B", "route": "B3", "src": "2차 재작업", "text": "미안해할 사람도, 미안하다고 할 사람도 없이. 베개 하나 바꿉니다.", "v": "남김", "why": "미안해할 사람 없이 베개를 바꾼다는 말로 옆사람과 코 고는 본인 모두에게 몰아세우지 않아도 된다는 안도를 준다", "defense": "", "dv": "", "dwhy": "", "cand": true}, {"id": "M004", "team": "C", "route": "C2", "src": "2차 재작업", "text": "그 사람 코골이를 제일 먼저 알아채는 사람이, 이제 당신이 아니어도 됩니다.", "v": "뺌", "why": "듣는 일을 베개에 넘긴다는 관점은 M032가 작동까지 담아 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M005", "team": "C", "route": "C2", "src": "2차 재작업", "text": "밤새 귀 기울이던 당번, 오늘 밤은 베개에게 넘겨요.", "v": "뺌", "why": "같은 관점이 이미 있고, \"오늘 밤은\"이 효과를 약속처럼 읽힌다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M006", "team": "B", "route": "B3", "src": "1차 생존", "text": "침대도 사람도 그대로. 고개 각도만 달라집니다.", "v": "뺌", "why": "고개 각도만 바뀐다는 관점은 M032가 옆사람의 일과 묶어 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M007", "team": "A", "route": "A1", "src": "2차 재작업", "text": "\"미안, 옆으로 좀…\" 어젯밤엔 몇 번 하셨어요?", "v": "뺌", "why": "밤마다의 장면을 알아보지만 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M008", "team": "A", "route": "A1", "src": "2차 재작업", "text": "팔꿈치 대신 베개에 맡겨 보는 30일.", "v": "뺌", "why": "팔꿈치를 베개가 넘겨받는 관점은 M032로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M009", "team": "A", "route": "A3", "src": "2차 재작업", "text": "그 사람이 불을 끄고 돌아봤을 때, 나는 이미 자고 있었다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 승인된 고객의 말 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M010", "team": "B", "route": "B3", "src": "1차 생존", "text": "십오 년째 같은 사람, 처음 바꿔 보는 베개.", "v": "뺌", "why": "사람은 그대로 베개만 바꾼다는 관점은 M003으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M011", "team": "C", "route": "C2", "src": "2차 재작업", "text": "코골이가 시작되면 먼저 움직이던 게 당신이었다면, 이번엔 베개 차례입니다.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M012", "team": "B", "route": "B3", "src": "2차 재작업", "text": "같이 눕던 자리 그대로, 베개 하나만 바꿔서.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M013", "team": "B", "route": "B3", "src": "2차 재작업", "text": "좋아하는 그 옆얼굴은 그대로, 베개만 새것으로.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M014", "team": "A", "route": "A1", "src": "2차 재작업", "text": "고개 각도는 베개에 맡기고, 팔꿈치는 이불 안에 둬 보세요.", "v": "뺌", "why": "팔꿈치와 고개 각도를 묶는 관점은 M032로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M015", "team": "C", "route": "C2", "src": "2차 재작업", "text": "밤새 듣는 사람과 밤새 모르는 사람 사이에, 듣는 베개 하나.", "v": "뺌", "why": "발견은 크지만 베개가 옆사람의 밤 일을 넘겨받는다는 관점은 M032로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M016", "team": "A", "route": "A3", "src": "1차 생존", "text": "베개 하나 바꿨더니 잠드는 순서가 바뀌었대요.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M017", "team": "C", "route": "C2", "src": "2차 재작업", "text": "다음 소리를 기다리는 사람 말고, 먼저 눈 감는 사람이 되어 보는 밤.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M018", "team": "C", "route": "C2", "src": "1차 생존", "text": "숨 고르는 그 짧은 틈에 잠들어 보려고 애쓴 적 있다면.", "v": "뺌", "why": "알아봄에서 끝나고 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M019", "team": "A", "route": "A1", "src": "1차 생존", "text": "찌르지 않아도 되는 밤.", "v": "뺌", "why": "같은 관점이 이미 있고, 줄만으로는 무엇이 찌르지 않게 하는지 닿지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M020", "team": "C", "route": "C2", "src": "1차 생존", "text": "그 사람 코 고는 박자를 좋아하는 노래보다 잘 아는 사람.", "v": "뺌", "why": "알아봄에서 끝나고 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M021", "team": "B", "route": "B3", "src": "2차 재작업", "text": "아무 말도 고르지 않아도 되는 밤. 고른 건 베개 하나.", "v": "뺌", "why": "탓하지 않는 관점은 M003으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M022", "team": "C", "route": "C2", "src": "2차 재작업", "text": "귀는 그대로 두고, 밤새 기다리는 일만 내려놓는 법.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M023", "team": "A", "route": "A3", "src": "1차 생존", "text": "\"남편이 처음으로 제가 먼저 잠들었대요.\"", "v": "뺌", "why": "M050과 같은 고객의 말이다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M024", "team": "A", "route": "A1", "src": "2차 재작업", "text": "팔꿈치로 밀고 나서, 혼자 한참 미안해하던 밤.", "v": "뺌", "why": "찌르는 사람의 미안함을 잡지만 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M025", "team": "B", "route": "B3", "src": "1차 생존", "text": "고쳐 달라고 할 사람 대신, 바꿔 볼 물건이 생겼습니다.", "v": "뺌", "why": "탓하지 않는 관점은 M003으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M026", "team": "C", "route": "C5", "src": "변론", "text": "새벽 2시 47분의 천장을 아는 사람에게.", "v": "뺌", "why": "변론 기각", "defense": "죽은 이유가 줄의 힘이 아니라 C2와 같은 자리라는 것이었는데, C2가 살았으니 이 줄은 C2 안으로 옮겨 쓸 수 있다. 살아남은 C2 줄이 모두 소리로만 밤을 그리는 데 비해, 이 줄은 같은 사람을 시각과 천장이라는 다른 감각으로 붙잡아 피드에서 멈추게 할 구체성이 가장 크다. 약속도 작동 설명도 없어 필수 사항에 걸리는 곳이 없다.", "dv": "기각", "dwhy": "1차에서 죽은 이유가 자리 겹침만이 아니었다. 새벽 2시 47분의 천장은 잠 못 드는 사람 누구에게나 맞는 장면이라 코골이도, 옆사람도, 베개도 줄 안에 없다. 불면 광고로 읽혀도 틀리지 않으니 받는 사람이 단일 제안에 닿을 다리가 없다. 구체성은 인정하지만 그 구체성이 이 제품의 밤을 가리키지 않는다.", "cand": false}, {"id": "M027", "team": "B", "route": "B3", "src": "2차 재작업", "text": "내가 등을 돌리던 밤 대신, 베개가 고개 각도를 바꾸는 밤.", "v": "뺌", "why": "옆사람이 하던 일 대신 베개가 각도를 바꾼다는 관점은 M032로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M028", "team": "A", "route": "A1", "src": "1차 생존", "text": "이제 팔꿈치는 쉬게 두세요.", "v": "뺌", "why": "같은 관점이 이미 있고, 줄만으로는 효과를 약속처럼 읽힌다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M029", "team": "C", "route": "C2", "src": "1차 생존", "text": "밤새 듣는 사람과 밤새 모르는 사람이 한 침대에 있다.", "v": "뺌", "why": "발견은 있지만 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M030", "team": "A", "route": "A1", "src": "1차 생존", "text": "밤마다 그 사람 어깨를 밀던 손, 오늘은 베개에 맡겨요.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M031", "team": "A", "route": "A3", "src": "2차 재작업", "text": "먼저 잠든 쪽이 바뀌자, 아침 얼굴도 바뀌었다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M032", "team": "B", "route": "B3", "src": "2차 재작업", "text": "밤마다 팔꿈치가 하던 일, 이제 베개가 고개 각도로 합니다.", "v": "남김", "why": "팔꿈치로 하던 일을 베개가 고개 각도로 한다는 말로 제품이 하는 일을 옆사람의 밤 안에서 보여 준다", "defense": "", "dv": "", "dwhy": "", "cand": true}, {"id": "M033", "team": "A", "route": "A1", "src": "2차 재작업", "text": "깨운 건 나였는데, 기억하는 것도 나뿐이었다.", "v": "뺌", "why": "깨운 사람만 기억한다는 발견은 강하지만 베개로 넘어가는 다리가 없다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M034", "team": "C", "route": "C2", "src": "2차 재작업", "text": "소리를 막는 귀마개 말고, 기다리는 일을 대신 맡는 베개.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M035", "team": "C", "route": "C2", "src": "2차 재작업", "text": "듣고, 팔꿈치로 찌르고, 돌려 눕히던 일. 고개 돌리는 건 베개가 합니다.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M036", "team": "A", "route": "A3", "src": "2차 재작업", "text": "내 자는 얼굴을, 그 사람이 처음 본 밤.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M037", "team": "A", "route": "A4", "src": "변론", "text": "코 곤다는 말 꺼내기 미안할 땐, 베개를 건네세요.", "v": "남김", "why": "변론 받아들임. 말 꺼내기 미안한 마음을 베개를 건네는 행동으로 바꿔 준다", "defense": "이 줄의 중심은 선물이라는 행동보다 \"말을 꺼내기 미안하다\"는 옆사람의 마음이고, 이것은 CD가 A1에서 더 파라고 한 미안함과 같은 자리다. 동시에 두 번째 독자인 코 고는 사람에게 탓하는 말로 읽히지 않는, 지금 줄 가운데 몇 안 되는 줄이다. 브리프의 바라는 반응(상대에게 내밀 이유 하나)에 바로 닿는다.", "dv": "받아들임", "dwhy": "변론이 맞다. 중심은 \"말 꺼내기 미안하다\"는 옆사람의 마음이고, 그 미안함을 풀 행동으로 베개를 건네는 데까지 한 줄 안에서 간다. 코 고는 사람에게 탓으로 읽히지 않고, 바라는 반응의 \"상대에게 내밀 이유 하나\"에 바로 닿는다.", "cand": true}, {"id": "M038", "team": "A", "route": "A3", "src": "2차 재작업", "text": "이불을 끌어 덮어 준 건, 이번엔 그 사람이었다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M039", "team": "B", "route": "B3", "src": "2차 재작업", "text": "올해 생일 선물은 베개로 골랐습니다. 우리 둘 다 쓰는 선물이라.", "v": "뺌", "why": "선물 관점은 M037로 남았고, \"우리 둘 다\"는 경쟁이 이미 하는 말이다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M040", "team": "B", "route": "B5", "src": "변론", "text": "각방 얘기는 30일 뒤에 해도 늦지 않아요.", "v": "남김", "why": "변론 받아들임. 각방 결정을 30일 체험 뒤로 미룰 이유를 준다", "defense": "루트는 안 살았지만 이 줄은 내기 구도가 없고 누구도 탓하지 않는다. 옆사람이 지금 실제로 고르려는 대안(각방, V39·V43)과 30일 체험을 한 문장에 맞세운 유일한 줄이다. 그래서 체험 권유가 막연한 \"써 보세요\"가 아니라 각방을 미룰 이유가 되어 행동 유도로 바로 이어진다.", "dv": "받아들임", "dwhy": "루트의 내기 구도는 줄에 남아 있지 않다. 옆사람이 실제로 고르려는 각방(V39·V43)을 30일 뒤로 미루자고 하면서 체험 이름만 쓰고 세부 조건은 말하지 않아 필수 사항에도 걸리지 않는다. 각방이라는 붐비는 소재를 \"둘 다\"가 아니라 결정을 앞둔 한 사람의 쪽에서 말한다.", "cand": true}, {"id": "M041", "team": "A", "route": "A3", "src": "2차 재작업", "text": "늘 마지막까지 깨어 있던 사람이, 그날은 먼저였다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M042", "team": "C", "route": "C2", "src": "1차 생존", "text": "잠들기 전에 귀부터 먼저 지쳐 버리는 사람에게.", "v": "뺌", "why": "알아봄에서 끝나고 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M043", "team": "A", "route": "A1", "src": "2차 재작업", "text": "사랑하는 사람을 밤마다 깨우는 일, 원해서 한 적은 없잖아요.", "v": "뺌", "why": "미안함을 잡지만 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M044", "team": "A", "route": "A3", "src": "1차 생존", "text": "늘 듣기만 하던 사람이 먼저 잠든 밤.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M045", "team": "A", "route": "A1", "src": "2차 재작업", "text": "자는 사람을 찌를 때마다, 미안한 쪽은 늘 찌르는 사람이었다.", "v": "뺌", "why": "미안함을 잡지만 베개로 이어지지 않는다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M046", "team": "B", "route": "B3", "src": "2차 재작업", "text": "거실로 나가는 대신, 베개를 바꿔 보기로 했습니다.", "v": "뺌", "why": "각방 대신 베개라는 관점은 M040으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M047", "team": "A", "route": "A1", "src": "2차 재작업", "text": "밀고, 기다리고, 또 밀던 밤. 고개 각도만큼은 베개 몫으로.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M048", "team": "A", "route": "A3", "src": "2차 재작업", "text": "그날 아침엔 \"잘 잤어?\"를 그 사람이 먼저 물었다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M049", "team": "C", "route": "C2", "src": "2차 재작업", "text": "30일, 밤 당번을 베개와 바꿔 서 보세요.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M050", "team": "원자료", "route": "R00", "src": "원자료 원문", "text": "남편이 처음으로 제가 먼저 잠들었대요", "v": "남김", "why": "사용 승인을 받은 구매자의 말 그대로라 단일 제안이 약속이 아니라 실제로 있었던 밤으로 들린다", "defense": "", "dv": "", "dwhy": "", "cand": true}, {"id": "M051", "team": "A", "route": "A1", "src": "1차 생존", "text": "당신이 밤새 하던 일을 베개가 넘겨받습니다.", "v": "뺌", "why": "같은 관점이 이미 있다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M052", "team": "A", "route": "A3", "src": "1차 생존", "text": "이번엔 그 사람이 당신 자는 얼굴을 볼 차례.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M053", "team": "A", "route": "A3", "src": "2차 재작업", "text": "천장을 세던 밤 대신, 아무것도 기억나지 않는 밤이 있었다.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M054", "team": "A", "route": "A3", "src": "2차 재작업", "text": "내가 먼저 잠들었다는 걸, 아침에 그 사람한테 들었어요.", "v": "뺌", "why": "먼저 잠든 밤 관점은 M050으로 남았다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M055", "team": "A", "route": "A1", "src": "1차 생존", "text": "\"자기야, 옆으로 좀…\" 오늘 밤엔 안 해도 돼요.", "v": "뺌", "why": "같은 관점이 이미 있고, \"오늘 밤엔 안 해도 돼요\"가 효과를 약속한다", "defense": "", "dv": "", "dwhy": "", "cand": false}, {"id": "M056", "team": "원자료", "route": "R00", "src": "원자료 원문", "text": "각방 쓴 지 2년 만에 다시 같은 방에서 잡니다", "v": "뺌", "why": "각방에서 돌아오는 관점은 M040이 체험과 묶어 남았고, 고객의 말은 M050이 이미 맡는다", "defense": "", "dv": "", "dwhy": "", "cand": false}]};</script>
+<script>
+(function(){
+  let tab='1', team='전체', verdict='전체';
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const teams={'1':['전체','A','B','C'],'2':['전체','A','B','C','원문']};
+  const verdicts={'1':['전체','살림','죽임'],'2':['전체','후보','남김','뺌','변론']};
+  function chips(id,list,cur,set){
+    const box=document.getElementById(id); box.querySelectorAll('button').forEach(b=>b.remove());
+    list.forEach(v=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.setAttribute('aria-pressed',v===cur);
+      b.onclick=()=>{set(v);render();};box.appendChild(b);});
+  }
+  function render(){
+    chips('fteam',teams[tab],team,v=>team=v); chips('fv',verdicts[tab],verdict,v=>verdict=v);
+    document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+    let rows=tab==='1'?D.l1:D.l2;
+    rows=rows.filter(r=>team==='전체'||r.team===team);
+    if(verdict!=='전체'){
+      rows=rows.filter(r=>verdict==='후보'?r.cand:verdict==='변론'?!!r.defense:r.v===verdict);
+    }
+    const th=document.getElementById('thead'), tb=document.getElementById('tbody');
+    if(tab==='1'){
+      th.innerHTML='<tr><th>줄</th><th>팀·루트</th><th>헤드라인</th><th>판정</th><th>이유</th></tr>';
+      tb.innerHTML=rows.map(r=>`<tr class="${r.v==='죽임'?'cut':''}"><td class="id">${r.id}</td><td class="id">${r.team} · ${r.route}</td><td class="hl">${esc(r.text)}</td><td><span class="v ${r.v==='살림'?'keep':'cut'}">${r.v}</span></td><td class="why">${esc(r.why)}</td></tr>`).join('');
+    } else {
+      th.innerHTML='<tr><th>줄</th><th>출처</th><th>헤드라인</th><th>판정</th><th>이유</th></tr>';
+      tb.innerHTML=rows.map(r=>{
+        const src=r.team==='원문'?'고객 후기 원문':`${r.team} · ${r.route} · ${r.src}`;
+        const v=r.cand?'<span class="v cand">후보</span>':`<span class="v ${r.v==='남김'?'keep':'cut'}">${r.v}</span>`;
+        const d=r.defense?`<span class="def">변론 ${esc(r.dv)}: ${esc(r.dwhy)}</span>`:'';
+        return `<tr class="${r.v==='뺌'?'cut':''}"><td class="id">${r.id}</td><td class="id">${esc(src)}</td><td class="hl">${esc(r.text)}</td><td>${v}</td><td class="why">${esc(r.why)}${d}</td></tr>`;}).join('');
+    }
+    document.getElementById('count').textContent=rows.length+'줄 표시';
+  }
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;team='전체';verdict='전체';render();});
+  render();
+})();
+</script>
+</body>
+</html>
