@@ -4,7 +4,7 @@
 
 Install: `git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters`, then call `/copy-masters` in Claude Code with subject, business goal, target, mode (performance or brand), channel (social feed, search ads, landing page, video script) and brand name. Requires Python 3.
 
-Honest limit: in head-to-head tests against a single prompt given the same material, its final lines won 0.37 of the time on average. Its value is a traceable process and fact checking, not better copy. English was tested once on one product: picks won 0.39 against single prompts.
+Honest limit: in head-to-head tests against a single prompt given the same material, its final lines won 0.37 of the time on average. Its value is a traceable process and fact checking, not better copy. English was tested once on one product: picks won 0.39 against single prompts, a number that leans on one client pick (rerun nine times on the same shortlist, the client chose a line scoring 0.67).
 
 ## Docs
 - [Overview (English)](https://5hyuns.github.io/ad-copy-agency-skill/): workflow, install, usage, limits
