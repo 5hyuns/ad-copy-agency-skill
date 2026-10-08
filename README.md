@@ -1,14 +1,14 @@
 # ad-copy-agency-skill: AI copywriting that works like an ad agency
 
-**Language**: English | [한국어](README.ko.md) · **Site**: https://5hyuns.github.io/ad-copy-agency-skill/ · **Demo**: https://5hyuns.github.io/ad-copy-agency-skill/demo/
+**Language**: English | [한국어](README.ko.md) · **Site**: https://5hyuns.github.io/ad-copy-agency-skill/
 
-An open-source [Claude Code](https://claude.com/claude-code) skill for AI ad copywriting. It writes advertising headlines by running a real ad agency workflow with one AI agent per role: planner, creative director, three creative teams and the client. The skill is named `copy-masters`.
+An open-source [Claude Code](https://claude.com/claude-code) plugin for AI ad copywriting. It writes advertising headlines by running a real ad agency workflow with one AI agent per role: planner, creative director, three creative teams and the client. The skill is named `copy-masters`.
 
 Ads are rarely one person writing one good sentence. A planner reframes the brief, a creative director reviews it, several teams write a lot of lines, the CD cuts them down more than once, and the client picks. The skill follows that order. Each role is a separate agent that sees only the files the previous step left behind, teams never pick their own lines, and the CD judges lines with team names hidden. At the end you get a final headline, two alternates, the path each line took, and a table checking that every step ran as the agency workflow expects.
 
-> **There is no evidence that it beats a single well-written prompt.** Read [Limits](#limits) first. It writes Korean copy for the Korean market and English copy for the US market.
+> **There is no evidence that it beats a single well-written prompt.** Read [Limits](#limits) first. It writes English copy for the US market and Korean copy for the Korean market.
 
-![CD review sheet: lines kept and killed](docs/og.png)
+![CD review sheet from an English run: lines kept and killed](docs/og.png)
 
 ## Quick start
 
@@ -34,19 +34,19 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skil
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters
 ```
 
-Call it like this (plugin install: `/copy-masters:copy-masters`). Add `카피 언어 (copy language): en` for English copy; the market then defaults to `us`. Field names are Korean; values can be in any language.
+Call it like this. Set `Copy language: en` for English copy, because the default is Korean. The market then defaults to `us`, so the client checks against US channel specs and FTC rules.
 
 ```
-/copy-masters
-주제 (subject): a smart pillow that tilts your head when it hears snoring
-사업 목표 (business goal): more 30-day trial orders from Instagram ads
-타깃 (target): people in their 30s-50s who sleep apart because a partner snores
-모드 (mode): 퍼포먼스 (performance)
-채널 (channel): SNS 피드 (social feed)
-브랜드명 (brand): Nuumlab
-필수 사항 (must-haves): not a medical device
-사용자 자료 (your material): ./material.md
-카피 언어 (copy language): en
+/copy-masters:copy-masters
+Subject: SlowBowl, a smart dog bowl that releases kibble in small portions when it notices a dog gulping
+Business goal: more first orders from Instagram ads
+Target: US dog owners, 25 to 45, whose dog eats too fast
+Mode: performance
+Channel: social feed
+Brand: Tumbleweed Pets
+Must-haves: not a veterinary medical device; no health claims
+Your material: ./material.md
+Copy language: en
 ```
 
 You can also just ask for ad copy or headlines in plain words. If a required input is missing, it asks before starting.
@@ -57,20 +57,20 @@ Requirements: Claude Code and Python 3 (the helper scripts use only the standard
 
 | Input | Required | Value |
 |---|---|---|
-| 주제 subject | yes | What is being advertised |
-| 사업 목표 business goal | yes | One short line, such as "more trial orders" |
-| 타깃 target | yes | Who the ad speaks to |
-| 모드 mode | yes | `퍼포먼스` performance (clicks, conversions) or `브랜드` brand (memory, attitude) |
-| 채널 channel | yes | `SNS 피드` social feed, `검색광고` search ads, `상세·랜딩페이지` product or landing page, `영상 스크립트` video script |
-| 브랜드명 brand | yes | Names the output folder and the learning log |
-| 제품 진실 product truth | no | What the company itself says is the core of the product |
-| 필수 사항 must-haves | no | What must or must not appear, tone rules |
-| 업종 industry | no | Adds industry-specific regulation checks |
-| 사용자 자료 your material | no | Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim |
-| 카피 언어 copy language | no | `ko` (default) or `en` |
-| 시장 market | no | `kr` or `us`: which country's channel specs and ad law the client checks against. Defaults to `kr` for Korean copy and `us` for English |
+| Subject | yes | What is being advertised |
+| Business goal | yes | One short line, such as "more trial orders" |
+| Target | yes | Who the ad speaks to |
+| Mode | yes | `performance` (clicks, conversions) or `brand` (memory, attitude) |
+| Channel | yes | `social feed`, `search ads`, `landing page` or `video script` |
+| Brand | yes | Names the output folder and the learning log |
+| Product truth | no | What the company itself says is the core of the product |
+| Must-haves | no | What must or must not appear, tone rules |
+| Industry | no | Adds industry-specific regulation checks |
+| Your material | no | Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim |
+| Copy language | no | `en` for English copy. Korean if not set |
+| Market | no | `us` or `kr`: which country's channel specs and ad law the client checks against. Follows the copy language if not set |
 
-It never guesses the mode, channel or target. Product numbers, conditions, reviews and certifications come only from the raw material or your files; anything unverified is flagged `[의뢰인 확인 필요]` (client to confirm).
+It never guesses the mode, channel or target. Product numbers, conditions, reviews and certifications come only from the raw material or your files; anything unverified is flagged `[client to confirm: …]`.
 
 ## Workflow
 
@@ -89,11 +89,15 @@ It never guesses the mode, channel or target. Product numbers, conditions, revie
 
 Outputs go to `copy-runs/<brand>/<date>-<topic>/` in your working directory. Running the same brand again surfaces lessons from `copy-runs/<brand>/learning-log.md` first.
 
-## Demo
+## Example run
 
-One full run on a fictional smart pillow. The planner moved the audience from the snorer to the partner lying awake next to them, the CD sent the first brief back once, three teams wrote 99 lines, and the client picked an approved customer quote, "남편이 처음으로 제가 먼저 잠들었대요" ("My husband says that for the first time, I fell asleep first"). Every line with the CD's verdict and reason is on the [demo page](https://5hyuns.github.io/ad-copy-agency-skill/demo/).
+One English run on a fictional US smart dog bowl, with the inputs shown above. The planner changed the kind of problem: owners already know to slow their dog down, and every bowl they know does it with an obstacle in a full bowl. The CD sent the first brief back once. Three teams wrote 99 lines, the CD kept 13, the round 2 pool had 58, the CD shortlisted 6, and the client picked:
 
-The run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
+> Two of you listening at dinner. Only one of you can hold the kibble back.
+
+Alternates: "He can't inhale what isn't in the bowl yet." and "He doesn't have to change. The bowl does."
+
+A full line-by-line record with every CD verdict and reason is published for a Korean run on a fictional smart pillow: [demo page (Korean)](https://5hyuns.github.io/ad-copy-agency-skill/demo/). That run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
 
 ## Limits
 
@@ -102,15 +106,16 @@ The run used 13 sub-agents, about 20 minutes and about 1.04M sub-agent tokens.
 - The CD and the client are the same model. Re-running the same pool can change the final line.
 - **English copy has been tested once.** On one fictional US product the English run worked end to end (all 46 process checks, every verdict parsed), but its three picks won 0.39 of blind comparisons against two single-prompt runs. The client's longest pick lost every pair while one of its alternates was the second strongest line. That number leans on one client pick: given the same shortlist nine more times, the client chose the 43-character alternate every time, and that line scored 0.67 against the single-prompt lines. Lines get longer at team rework (41.8 characters for round-1 survivors, 58.5 for rewrites), not at the CD's shortlist. The US regulation checklist did its job: the client dropped a customer quote under the FTC's typical-results rule (16 CFR 255.2).
 - It writes headlines only. Visuals, subheads and body copy are out of scope.
-- See "알려진 한계" (known limits) in [SKILL.md](SKILL.md) for the full list. Paths under `reports/`, `research_notes/` and `skill-tests/` cited there are design evidence kept outside this repository and are not needed to run the skill.
+- The full list of known limits is in [SKILL.md](SKILL.md), which is written in Korean. Paths under `reports/`, `research_notes/` and `skill-tests/` cited there are design evidence kept outside this repository and are not needed to run the skill.
 
 ## Repository layout
 
+- `.claude-plugin/`: plugin and marketplace manifests
 - `SKILL.md`: steps, principles and known limits
 - `templates/common/`: collection, planner and creative surgery prompts, shared by both languages
-- `templates/ko/`, `templates/en/`: team, CD and client prompts, written separately for each language rather than translated
+- `templates/en/`, `templates/ko/`: team, CD and client prompts, written separately for each language rather than translated
 - `scripts/`: `build_pool.py` moves and hides lines between roles, `assemble.py` builds the final report and process check
-- `references/kr/`, `references/us/`: channel specs and the fact and regulation checklist for each market (US: FTC Act Section 5, deception and substantiation statements, 16 CFR 255 and 465, FDA general wellness)
+- `references/us/`, `references/kr/`: channel specs and the fact and regulation checklist for each market (US: FTC Act Section 5, deception and substantiation statements, 16 CFR 255 and 465, FDA general wellness)
 - `docs/`: the project site and demo page (GitHub Pages)
 
 ## License
@@ -121,4 +126,4 @@ MIT. See [LICENSE](LICENSE).
 
 The name copy-masters comes from versions 1 to 4, which imitated the methods of famous copywriters (David Ogilvy, Bill Bernbach, Taniyama Masakazu, Jung Chul). Version 5 dropped that design and follows the agency workflow instead. The design draws on production records of 25 well-known campaigns and on Turnbull & Wheeler's research on London advertising agencies, where only two of 24 steps produced ideas and the rest were about agreeing on the problem and checking the work.
 
-Related keywords: AI copywriting, ad copy generator, headline generator, Claude skills, Claude Code skill, multi-agent workflow, creative brief, advertising agency, 광고 카피, 카피라이팅, 헤드라인.
+Related keywords: AI copywriting, ad copy generator, headline generator, Claude Code plugin, Claude skills, multi-agent workflow, creative brief, advertising agency.

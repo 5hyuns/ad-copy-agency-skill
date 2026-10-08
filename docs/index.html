@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://5hyuns.github.io/ad-copy-agency-skill/">
 <meta property="og:image" content="https://5hyuns.github.io/ad-copy-agency-skill/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "ad-copy-agency-skill (copy-masters)", "description": "Open-source Claude Code skill for AI ad copywriting. Planner, creative director, three creative teams and client review run as separate agents, following a real ad agency workflow to write and fact-check headlines.", "codeRepository": "https://github.com/5hyuns/ad-copy-agency-skill", "url": "https://5hyuns.github.io/ad-copy-agency-skill/", "programmingLanguage": ["Markdown", "Python"], "runtimePlatform": "Claude Code", "license": "https://opensource.org/licenses/MIT", "inLanguage": ["en", "ko"], "keywords": "AI copywriting, ad copy generator, headline generator, Claude Code skill, Claude skills, multi-agent, advertising agency workflow, creative brief, copywriting AI, 광고 카피, 카피라이팅", "author": {"@type": "Person", "name": "5hyuns", "url": "https://github.com/5hyuns"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "ad-copy-agency-skill (copy-masters)", "description": "Open-source Claude Code skill for AI ad copywriting. Planner, creative director, three creative teams and client review run as separate agents, following a real ad agency workflow to write and fact-check headlines.", "codeRepository": "https://github.com/5hyuns/ad-copy-agency-skill", "url": "https://5hyuns.github.io/ad-copy-agency-skill/", "programmingLanguage": ["Markdown", "Python"], "runtimePlatform": "Claude Code", "license": "https://opensource.org/licenses/MIT", "inLanguage": ["en", "ko"], "keywords": "AI copywriting, ad copy generator, headline generator, Claude Code skill, Claude skills, multi-agent, advertising agency workflow, creative brief, copywriting AI", "author": {"@type": "Person", "name": "5hyuns", "url": "https://github.com/5hyuns"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -120,14 +120,14 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
     <pre id="inst">/plugin install copy-masters@ad-copy-agency-skill</pre>
     <button type="button" data-copy="inst">Copy</button>
   </div>
-  <div class="funnel" aria-label="Line counts in the demo run">
+  <div class="funnel" aria-label="Line counts in the English run">
     <div class="frow"><span>3 teams, round 1</span><div class="bar" style="width:100%"></div><span class="n">99</span></div>
-    <div class="frow"><span>CD round 1 keeps</span><div class="bar" style="width:18.2%"></div><span class="n">18</span></div>
-    <div class="frow"><span>CD round 2 pool</span><div class="bar" style="width:56.6%"></div><span class="n">56</span></div>
-    <div class="frow"><span>CD shortlist</span><div class="bar" style="width:5.1%"></div><span class="n">5</span></div>
+    <div class="frow"><span>CD round 1 keeps</span><div class="bar" style="width:13.1%"></div><span class="n">13</span></div>
+    <div class="frow"><span>CD round 2 pool</span><div class="bar" style="width:58.6%"></div><span class="n">58</span></div>
+    <div class="frow"><span>CD shortlist</span><div class="bar" style="width:6.1%"></div><span class="n">6</span></div>
     <div class="frow"><span>Client's final</span><div class="bar" style="width:1%"></div><span class="n">1</span></div>
   </div>
-  <p class="muted" style="font-size:.85rem">Line counts from one demo run on a fictional smart pillow. The round 2 pool adds 33 rewritten lines, 3 defended lines and 2 approved customer quotes to the 18 survivors. It writes Korean copy for the Korean market and English copy for the US market.</p>
+  <p class="muted" style="font-size:.85rem">Line counts from one English run on a fictional US smart dog bowl. The round 2 pool adds rewritten lines, defended lines and approved customer quotes to the 13 survivors. It writes English copy for the US market and Korean copy for the Korean market.</p>
 </header>
 
 <section class="stack" aria-labelledby="flow">
@@ -151,13 +151,13 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 <section class="stack" aria-labelledby="pen">
   <span class="eyebrow">FROM CD ROUND 1</span>
   <h2 id="pen">Every line gets a verdict and a reason</h2>
-  <p>Real verdicts from the demo run, with English glosses. The CD does not pick by taste or by counting pros and cons; it checks each line against criteria written down before reading. Length is never a reason.</p>
+  <p>Real verdicts from the English run. The CD does not pick by taste or by counting pros and cons; it checks each line against criteria written down before reading. Length is never a reason.</p>
   <div class="sheet">
-    <div class="ln keep"><span class="t" lang="ko">다음 코골이까지 몇 초 남았는지 세고 있는 당신에게.</span><span class="mark">keep</span><span class="r">"To you, counting the seconds to the next snore." Sees the partner as the one listening all night.</span></div>
-    <div class="ln keep"><span class="t" lang="ko">이제 팔꿈치는 쉬게 두세요.</span><span class="mark">keep</span><span class="r">"Let your elbow rest now." Names the nightly nudging the partner does.</span></div>
-    <div class="ln cut"><span class="t" lang="ko">밤이 바뀌는 데 필요한 건 고개 각도 하나였다.</span><span class="mark">kill</span><span class="r">"All the night needed was one head angle." The mechanism is the hero; sounds like competitors' tech talk.</span></div>
-    <div class="ln cut"><span class="t" lang="ko">그 사람 습관은 못 고쳐도, 고개 각도는 바뀝니다.</span><span class="mark">kill</span><span class="r">"You can't fix their habit, but the angle can change." Blames the snorer.</span></div>
-    <div class="ln cut"><span class="t" lang="ko">오늘 밤부터 30일, 먼저 잠드는 쪽이 이깁니다.</span><span class="mark">kill</span><span class="r">"30 days from tonight: whoever falls asleep first wins." Pits the couple against each other.</span></div>
+    <div class="ln keep"><span class="t">He looks up. There's more.</span><span class="mark">keep</span><span class="r">A scene only this product can produce: the fast eater looks up at a bowl he thinks is finished and finds more.</span></div>
+    <div class="ln keep"><span class="t">The gulp is the cue.</span><span class="mark">keep</span><span class="r">Turns the problem into the switch, from the dog's side.</span></div>
+    <div class="ln cut"><span class="t">Kibble on a drip.</span><span class="mark">kill</span><span class="r">"Drip" reads as medical.</span></div>
+    <div class="ln cut"><span class="t">The end of dinner keeps not arriving.</span><span class="mark">kill</span><span class="r">Reads as a meal that never ends.</span></div>
+    <div class="ln cut"><span class="t">You can stop doling out dinner by the handful.</span><span class="mark">kill</span><span class="r">Owners portioning by hand is not in the material.</span></div>
   </div>
 </section>
 
@@ -181,52 +181,52 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 <section class="stack" id="usage" aria-labelledby="h-usage">
   <span class="eyebrow">USAGE</span>
   <h2 id="h-usage">Tell it what, for whom, and where it runs</h2>
-  <p>Call it with the slash command or just ask for ad copy or headlines. If a required input is missing it asks first; it never guesses the mode, channel or target. Field names are Korean and values can be in any language. Add <code>카피 언어 (copy language): en</code> for English copy; the market then defaults to <code>us</code>, so the client checks against US channel specs and FTC rules.</p>
-  <pre class="block">/copy-masters
-주제 (subject): a smart pillow that tilts your head when it hears snoring
-사업 목표 (business goal): more 30-day trial orders from Instagram ads
-타깃 (target): people in their 30s-50s who sleep apart because a partner snores
-모드 (mode): 퍼포먼스 (performance)
-채널 (channel): SNS 피드 (social feed)
-브랜드명 (brand): Nuumlab
-필수 사항 (must-haves): not a medical device
-사용자 자료 (your material): ./material.md
-카피 언어 (copy language): en</pre>
+  <p>Call it with the slash command or just ask for ad copy or headlines. If a required input is missing it asks first; it never guesses the mode, channel or target. Set <code>Copy language: en</code> for English copy (the default is Korean); the market then defaults to <code>us</code>, so the client checks against US channel specs and FTC rules.</p>
+  <pre class="block">/copy-masters:copy-masters
+Subject: SlowBowl, a smart dog bowl that releases kibble in small portions when it notices a dog gulping
+Business goal: more first orders from Instagram ads
+Target: US dog owners, 25 to 45, whose dog eats too fast
+Mode: performance
+Channel: social feed
+Brand: Tumbleweed Pets
+Must-haves: not a veterinary medical device; no health claims
+Your material: ./material.md
+Copy language: en</pre>
   <div class="tbl"><table>
     <thead><tr><th>Input</th><th>Required</th><th>Value</th></tr></thead>
     <tbody>
-      <tr><td>주제 subject</td><td>yes</td><td>What is being advertised</td></tr>
-      <tr><td>사업 목표 business goal</td><td>yes</td><td>One short line</td></tr>
-      <tr><td>타깃 target</td><td>yes</td><td>Who the ad speaks to</td></tr>
-      <tr><td>모드 mode</td><td>yes</td><td><code>퍼포먼스</code> performance (clicks, conversions) or <code>브랜드</code> brand (memory, attitude)</td></tr>
-      <tr><td>채널 channel</td><td>yes</td><td><code>SNS 피드</code> social feed, <code>검색광고</code> search ads, <code>상세·랜딩페이지</code> product or landing page, <code>영상 스크립트</code> video script</td></tr>
-      <tr><td>브랜드명 brand</td><td>yes</td><td>Names the output folder and learning log</td></tr>
-      <tr><td>제품 진실 product truth</td><td>no</td><td>What the company itself says is the core of the product</td></tr>
-      <tr><td>필수 사항 must-haves</td><td>no</td><td>What must or must not appear, tone rules</td></tr>
-      <tr><td>업종 industry</td><td>no</td><td>Adds industry-specific regulation checks</td></tr>
-      <tr><td>사용자 자료 your material</td><td>no</td><td>Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim</td></tr>
-      <tr><td>카피 언어 copy language</td><td>no</td><td><code>ko</code> (default) or <code>en</code></td></tr>
-      <tr><td>시장 market</td><td>no</td><td><code>kr</code> or <code>us</code>: whose channel specs and ad law the client checks against</td></tr>
+      <tr><td>Subject</td><td>yes</td><td>What is being advertised</td></tr>
+      <tr><td>Business goal</td><td>yes</td><td>One short line</td></tr>
+      <tr><td>Target</td><td>yes</td><td>Who the ad speaks to</td></tr>
+      <tr><td>Mode</td><td>yes</td><td><code>performance</code> (clicks, conversions) or <code>brand</code> (memory, attitude)</td></tr>
+      <tr><td>Channel</td><td>yes</td><td><code>social feed</code>, <code>search ads</code>, <code>landing page</code> or <code>video script</code></td></tr>
+      <tr><td>Brand</td><td>yes</td><td>Names the output folder and learning log</td></tr>
+      <tr><td>Product truth</td><td>no</td><td>What the company itself says is the core of the product</td></tr>
+      <tr><td>Must-haves</td><td>no</td><td>What must or must not appear, tone rules</td></tr>
+      <tr><td>Industry</td><td>no</td><td>Adds industry-specific regulation checks</td></tr>
+      <tr><td>Your material</td><td>no</td><td>Decks, reviews, interviews. Approved customer quotes reach the shortlist verbatim</td></tr>
+      <tr><td>Copy language</td><td>no</td><td><code>en</code> for English copy; Korean if not set</td></tr>
+      <tr><td>Market</td><td>no</td><td><code>us</code> or <code>kr</code>: whose channel specs and ad law the client checks against. Follows the copy language if not set</td></tr>
     </tbody>
   </table></div>
   <h3>Output</h3>
   <p>One file per step under <code>copy-runs/&lt;brand&gt;/&lt;date&gt;-&lt;topic&gt;/</code> in your working directory. At the end you get the final line and two alternates, the planner's reframe, line counts per step, any lines the fact check caught, and the facts the client still needs to confirm.</p>
   <h3>Time and cost</h3>
-  <p>The demo run used 13 sub-agents and took about 20 minutes, about 1.04M sub-agent tokens in total. It suits work where you want to follow the process or where fact checking matters more than speed.</p>
+  <p>The Korean demo run used 13 sub-agents and took about 20 minutes, about 1.04M sub-agent tokens in total. It suits work where you want to follow the process or where fact checking matters more than speed.</p>
 </section>
 
 <section class="stack" id="demo" aria-labelledby="h-demo">
   <span class="eyebrow">DEMO</span>
-  <h2 id="h-demo">One full run on a fictional smart pillow</h2>
+  <h2 id="h-demo">One full run on a fictional smart dog bowl</h2>
   <div class="demo">
     <div class="stack">
       <span class="eyebrow">CLIENT'S FINAL</span>
-      <span class="q" lang="ko">“남편이 처음으로 제가 먼저 잠들었대요”</span>
-      <span class="muted" style="font-size:.85rem">"My husband says that for the first time, I fell asleep first." An approved customer quote, used verbatim.</span>
+      <span class="q">“Two of you listening at dinner. Only one of you can hold the kibble back.”</span>
+      <span class="muted" style="font-size:.85rem">Alternates: "He can't inhale what isn't in the bowl yet." and "He doesn't have to change. The bowl does."</span>
     </div>
     <div class="stack">
-      <p style="font-size:.93rem">The planner moved the audience from the snorer to the partner lying awake next to them. The CD sent the first brief back once. All 99 lines from 15 routes are listed with the CD's verdicts and reasons.</p>
-      <a class="btn" href="demo/">Open the demo record (Korean)</a>
+      <p style="font-size:.93rem">The planner changed the kind of problem: owners already know to slow their dog down, and every bowl they know does it with an obstacle in a full bowl. The evidence was one review from an owner still listening for chewing at dinner. The CD sent the first brief back once. Three teams wrote 99 lines from 15 routes. A full line-by-line record exists for a Korean run.</p>
+      <a class="btn" href="demo/">Open the Korean run record</a>
     </div>
   </div>
 </section>

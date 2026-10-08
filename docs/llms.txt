@@ -1,6 +1,6 @@
 # ad-copy-agency-skill
 
-> Open-source Claude Code skill (skill name: copy-masters) for AI ad copywriting. It runs an ad agency workflow with one agent per role: client brief, raw material collection, planner's creative brief, creative director's brief review ("creative surgery"), three creative teams writing in sequence, two CD review rounds with rework and defense, and a client review with fact and advertising-law checks. Output is a final headline, two alternates and a process check. It writes Korean copy for the Korean market (default) or English copy for the US market (`카피 언어: en`), with a market-specific regulation checklist (US: FTC Act Section 5, 16 CFR 255 and 465).
+> Open-source Claude Code skill (skill name: copy-masters) for AI ad copywriting. It runs an ad agency workflow with one agent per role: client brief, raw material collection, planner's creative brief, creative director's brief review ("creative surgery"), three creative teams writing in sequence, two CD review rounds with rework and defense, and a client review with fact and advertising-law checks. Output is a final headline, two alternates and a process check. It writes Korean copy for the Korean market (default) or English copy for the US market (`Copy language: en`), with a market-specific regulation checklist (US: FTC Act Section 5, 16 CFR 255 and 465).
 
 Install: in a Claude Code session run `/plugin marketplace add 5hyuns/ad-copy-agency-skill` then `/plugin install copy-masters@ad-copy-agency-skill` (the skill is then `/copy-masters:copy-masters`); or `git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters` (then `/copy-masters`). Call it in Claude Code with subject, business goal, target, mode (performance or brand), channel (social feed, search ads, landing page, video script) and brand name. Requires Python 3.
 
@@ -8,7 +8,7 @@ Honest limit: in head-to-head tests against a single prompt given the same mater
 
 ## Docs
 - [Overview (English)](https://5hyuns.github.io/ad-copy-agency-skill/): workflow, install, usage, limits
-- [소개 (한국어)](https://5hyuns.github.io/ad-copy-agency-skill/ko/): Korean overview
-- [Demo run](https://5hyuns.github.io/ad-copy-agency-skill/demo/): 99 headlines for a fictional smart pillow with CD verdicts and reasons
+- [Korean overview](https://5hyuns.github.io/ad-copy-agency-skill/ko/): the same overview in Korean
+- [Demo run](https://5hyuns.github.io/ad-copy-agency-skill/demo/): 99 headlines for a fictional smart pillow with CD verdicts and reasons (Korean run, Korean page)
 - [README](https://github.com/5hyuns/ad-copy-agency-skill/blob/main/README.md): install and usage
 - [SKILL.md](https://github.com/5hyuns/ad-copy-agency-skill/blob/main/SKILL.md): full step definitions and known limits

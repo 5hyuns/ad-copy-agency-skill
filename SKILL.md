@@ -46,6 +46,8 @@ description: 광고 대행사의 작업 흐름(클라이언트 브리프 → 원
 
 필수 인자가 빠지면 먼저 묻는다. 모드·채널·타깃은 추측하지 않는다.
 
+인자는 영어 이름과 영어 값으로 와도 된다. 이름은 Subject(주제), Business goal(사업 목표), Target(타깃), Mode(모드), Channel(채널), Brand(브랜드명), Product truth(제품 진실), Must-haves(필수 사항), Industry(업종), Your material(사용자 자료), Copy language(카피 언어), Market(시장)이다. 값은 performance(퍼포먼스), brand(브랜드), social feed(SNS 피드), search ads(검색광고), landing page 또는 product page(상세·랜딩페이지), video script(영상 스크립트)로 받는다. 오케스트레이터는 `01-client-brief.md`에 한국어 정본 이름과 값으로 옮기고, 카피 언어가 en이면 아래 형식대로 영어를 괄호로 붙인다(`- 모드 (Mode): 퍼포먼스 (performance)`). 영어 이름으로 받았어도 카피 언어가 주어지지 않으면 기본값 ko를 따른다.
+
 ## 산출물 위치
 
 ```
@@ -95,7 +97,7 @@ copy-runs/<브랜드>/
 - 카피 언어: ko 또는 en
 - 시장: kr 또는 us
 ```
-카피 언어가 en이면 항목 이름 뒤에 영어 이름을 괄호로 붙이고 값은 받은 말 그대로 적는다(`- 주제 (Subject):`, `- 사업 목표 (Business goal):`, `- 타깃 (Target):`, `- 모드 (Mode):`, `- 채널 (Channel):`, `- 브랜드명 (Brand):`, `- 카피 언어 (Copy language): en`). 스크립트가 이 파일의 `카피 언어`를 읽어 다음 역할에게 넘기는 파일의 말을 정한다.
+카피 언어가 en이면 항목 이름 뒤에 영어 이름을 괄호로 붙이고 값은 받은 말 그대로 적는다. 모드와 채널만 한국어 정본 값 뒤에 영어를 괄호로 붙인다(`- 주제 (Subject):`, `- 사업 목표 (Business goal):`, `- 타깃 (Target):`, `- 모드 (Mode):`, `- 채널 (Channel):`, `- 브랜드명 (Brand):`, `- 카피 언어 (Copy language): en`). 스크립트가 이 파일의 `카피 언어`를 읽어 다음 역할에게 넘기는 파일의 말을 정한다.
 
 ### 2. 재료 모으기 → `02-raw.md` (`templates/common/collect-prompt.md`)
 수집 에이전트 하나. 시장이 kr이 아니면 템플릿 맨 아래 "다른 시장일 때"를, 카피 언어가 en이면 "영어로 쓸 때"를 붙이고, 해당하지 않는 절은 뺀다. 검색 상한 10회, 원문 수신 15건(임시 값). 사용자 자료가 있으면 그것부터 옮긴다.
