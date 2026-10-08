@@ -10,7 +10,16 @@
 
 ## 빠른 시작
 
-스킬 폴더에 복제합니다. 폴더 이름은 `copy-masters`로 둡니다.
+Claude Code 세션 안에서 플러그인으로 설치합니다.
+
+```
+/plugin marketplace add 5hyuns/ad-copy-agency-skill
+/plugin install copy-masters@ad-copy-agency-skill
+```
+
+새 세션을 열면(또는 `/reload-plugins`) 스킬 이름은 `/copy-masters:copy-masters`입니다. 업데이트는 `/plugin marketplace update ad-copy-agency-skill`입니다.
+
+파일을 직접 두고 싶으면 스킬 폴더에 복제해도 됩니다. 폴더 이름은 `copy-masters`로 둡니다. 이때 스킬 이름은 `/copy-masters`, 업데이트는 `git pull`입니다.
 
 ```bash
 # 모든 프로젝트에서 (macOS, Linux, Git Bash)
@@ -23,7 +32,7 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skil
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters
 ```
 
-새 Claude Code 세션을 열고 이렇게 부릅니다.
+새 Claude Code 세션을 열고 이렇게 부릅니다(플러그인 설치면 `/copy-masters:copy-masters`).
 
 ```
 /copy-masters
@@ -40,8 +49,6 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy
 슬래시 없이 "광고 카피 써줘", "헤드라인 뽑아줘"라고 해도 스킬이 불립니다. 필수 인자가 빠지면 먼저 묻습니다.
 
 필요한 것은 Claude Code와 Python 3입니다. 스크립트는 표준 라이브러리만 씁니다. 원자료 수집에는 웹 검색 도구를 쓰고, 없으면 사용자 자료만으로 진행합니다.
-
-업데이트는 설치한 폴더에서 `git pull` 하면 됩니다.
 
 ## 인자
 

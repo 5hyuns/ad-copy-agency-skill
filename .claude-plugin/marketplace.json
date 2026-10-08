@@ -1,0 +1,17 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "ad-copy-agency-skill",
+  "description": "The copy-masters plugin, served from its own repository: one command to add, one to install.",
+  "owner": {
+    "name": "5hyuns",
+    "email": "555hyuns@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "copy-masters",
+      "source": "./",
+      "description": "Ad-agency workflow for headlines: planner brief, creative surgery, three creative teams, two CD reviews with rework and defence, client pick with fact and regulation check. Korean and English copy.",
+      "category": "productivity"
+    }
+  ]
+}

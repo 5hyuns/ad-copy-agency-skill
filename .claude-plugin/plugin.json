@@ -1,0 +1,20 @@
+{
+  "name": "copy-masters",
+  "description": "Ad-agency workflow for headlines: planner brief, creative surgery, three creative teams, two CD reviews with rework and defence, client pick with fact and regulation check. Korean and English copy.",
+  "homepage": "https://5hyuns.github.io/ad-copy-agency-skill/",
+  "repository": "https://github.com/5hyuns/ad-copy-agency-skill",
+  "author": {
+    "name": "5hyuns",
+    "email": "555hyuns@gmail.com"
+  },
+  "keywords": [
+    "copywriting",
+    "advertising",
+    "headline",
+    "ad-copy",
+    "creative-brief",
+    "korean",
+    "marketing"
+  ],
+  "license": "MIT"
+}

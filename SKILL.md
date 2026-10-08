@@ -71,7 +71,7 @@ copy-runs/<브랜드>/
     10-process-check.md         # 과정 점검
 ```
 
-스크립트(`scripts/`)는 역할 사이에서 파일을 옮기고 가린다. 오케스트레이터가 줄을 손으로 옮기지 않는다. `{스킬}`은 이 스킬 폴더의 절대 경로다(프로젝트의 `.claude/skills/copy-masters/`든 `~/.claude/skills/copy-masters/`든). 스크립트는 `{스킬}/scripts/`에서 `python <스크립트> <인자> <실행 폴더>`로 부른다.
+스크립트(`scripts/`)는 역할 사이에서 파일을 옮기고 가린다. 오케스트레이터가 줄을 손으로 옮기지 않는다. `{스킬}`은 이 스킬 폴더의 절대 경로다. 플러그인으로 설치했으면 `${CLAUDE_PLUGIN_ROOT}`이고(이 자리에 실제 경로가 채워져 있으면 그 경로다), 폴더로 복제했으면 프로젝트의 `.claude/skills/copy-masters/`나 `~/.claude/skills/copy-masters/`다. 스크립트는 `{스킬}/scripts/`에서 `python <스크립트> <인자> <실행 폴더>`로 부른다.
 
 ## 단계
 

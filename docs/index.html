@@ -113,8 +113,12 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
   <h1>An AI copywriting skill that works like an ad agency</h1>
   <p class="lede">Good ads rarely come from one person writing one good sentence. A planner reframes the brief, a creative director reviews it, several creative teams write a lot of lines, the CD cuts them down more than once, and the client picks. This Claude Code skill runs that workflow with one AI agent per role and hands you a headline, two alternates and a record of how they got there.</p>
   <div class="cmd">
-    <pre id="clone">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre>
-    <button type="button" data-copy="clone">Copy</button>
+    <pre id="add">/plugin marketplace add 5hyuns/ad-copy-agency-skill</pre>
+    <button type="button" data-copy="add">Copy</button>
+  </div>
+  <div class="cmd">
+    <pre id="inst">/plugin install copy-masters@ad-copy-agency-skill</pre>
+    <button type="button" data-copy="inst">Copy</button>
   </div>
   <div class="funnel" aria-label="Line counts in the demo run">
     <div class="frow"><span>3 teams, round 1</span><div class="bar" style="width:100%"></div><span class="n">99</span></div>
@@ -159,15 +163,19 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 
 <section class="stack" id="install" aria-labelledby="h-install">
   <span class="eyebrow">INSTALL</span>
-  <h2 id="h-install">Clone it into a skills folder</h2>
-  <p>Put it in your user skills folder to use it everywhere, or in a project's <code>.claude/skills/</code> to use it there only. Keep the folder name <code>copy-masters</code>.</p>
+  <h2 id="h-install">Two commands inside Claude Code</h2>
+  <p>Install it as a plugin from this repository. Start a new session (or run <code>/reload-plugins</code>) and the skill is <code>/copy-masters:copy-masters</code>. Update with <code>/plugin marketplace update ad-copy-agency-skill</code>.</p>
+  <div class="cmd"><pre id="p1">/plugin marketplace add 5hyuns/ad-copy-agency-skill</pre><button type="button" data-copy="p1">Copy</button></div>
+  <div class="cmd"><pre id="p2">/plugin install copy-masters@ad-copy-agency-skill</pre><button type="button" data-copy="p2">Copy</button></div>
+  <h3>Or clone it into a skills folder</h3>
+  <p>Put it in your user skills folder to use it everywhere, or in a project's <code>.claude/skills/</code> to use it there only. Keep the folder name <code>copy-masters</code>; the skill is then <code>/copy-masters</code> and you update with <code>git pull</code>.</p>
   <h3>All projects (macOS · Linux · Git Bash)</h3>
   <div class="cmd"><pre id="c1">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre><button type="button" data-copy="c1">Copy</button></div>
   <h3>All projects (Windows PowerShell)</h3>
   <div class="cmd"><pre id="c2">git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skills\copy-masters"</pre><button type="button" data-copy="c2">Copy</button></div>
   <h3>One project</h3>
   <div class="cmd"><pre id="c3">git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters</pre><button type="button" data-copy="c3">Copy</button></div>
-  <p class="muted" style="font-size:.9rem">Requires Claude Code and Python 3 (the helper scripts use only the standard library). Raw material collection uses a web search tool when one is available and falls back to your own material. Start a new session and <code>copy-masters</code> appears in the skill list. Update with <code>git pull</code>.</p>
+  <p class="muted" style="font-size:.9rem">Requires Claude Code and Python 3 (the helper scripts use only the standard library). Raw material collection uses a web search tool when one is available and falls back to your own material. Start a new session and <code>copy-masters</code> appears in the skill list.</p>
 </section>
 
 <section class="stack" id="usage" aria-labelledby="h-usage">

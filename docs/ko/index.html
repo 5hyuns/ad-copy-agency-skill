@@ -113,8 +113,12 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
   <h1>헤드라인 한 줄을, 대행사가 일하는 순서대로</h1>
   <p class="lede">광고는 한 사람이 문장을 잘 써서 나오지 않습니다. 플래너가 과제를 다시 정의하고, CD가 브리프를 심사하고, 여러 팀이 많이 써 오고, CD가 여러 번 쳐내고, 광고주가 고릅니다. 이 Claude Code 스킬은 그 흐름을 역할별 에이전트로 따라가 헤드라인을 냅니다.</p>
   <div class="cmd">
-    <pre id="clone">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre>
-    <button type="button" data-copy="clone">복사</button>
+    <pre id="add">/plugin marketplace add 5hyuns/ad-copy-agency-skill</pre>
+    <button type="button" data-copy="add">복사</button>
+  </div>
+  <div class="cmd">
+    <pre id="inst">/plugin install copy-masters@ad-copy-agency-skill</pre>
+    <button type="button" data-copy="inst">복사</button>
   </div>
   <div class="funnel" aria-label="시연 실행의 줄 수 흐름">
     <div class="frow"><span>세 팀 1차</span><div class="bar" style="width:100%"></div><span class="n">99</span></div>
@@ -159,8 +163,12 @@ footer { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line
 
 <section class="stack" id="install" aria-labelledby="h-install">
   <span class="eyebrow">설치</span>
-  <h2 id="h-install">스킬 폴더에 복제하면 끝입니다</h2>
-  <p>모든 프로젝트에서 쓰려면 사용자 스킬 폴더에, 한 프로젝트에서만 쓰려면 그 프로젝트의 <code>.claude/skills/</code>에 둡니다. 폴더 이름은 <code>copy-masters</code>로 합니다.</p>
+  <h2 id="h-install">Claude Code 안에서 두 줄이면 됩니다</h2>
+  <p>이 저장소에서 바로 플러그인으로 설치합니다. 새 세션을 열면(또는 <code>/reload-plugins</code>) 스킬 이름은 <code>/copy-masters:copy-masters</code>입니다. 업데이트는 <code>/plugin marketplace update ad-copy-agency-skill</code>입니다.</p>
+  <div class="cmd"><pre id="p1">/plugin marketplace add 5hyuns/ad-copy-agency-skill</pre><button type="button" data-copy="p1">복사</button></div>
+  <div class="cmd"><pre id="p2">/plugin install copy-masters@ad-copy-agency-skill</pre><button type="button" data-copy="p2">복사</button></div>
+  <h3>또는 스킬 폴더에 복제</h3>
+  <p>모든 프로젝트에서 쓰려면 사용자 스킬 폴더에, 한 프로젝트에서만 쓰려면 그 프로젝트의 <code>.claude/skills/</code>에 둡니다. 폴더 이름은 <code>copy-masters</code>로 합니다. 이때 스킬 이름은 <code>/copy-masters</code>, 업데이트는 <code>git pull</code>입니다.</p>
   <h3>모든 프로젝트 (macOS · Linux · Git Bash)</h3>
   <div class="cmd"><pre id="c1">git clone https://github.com/5hyuns/ad-copy-agency-skill.git ~/.claude/skills/copy-masters</pre><button type="button" data-copy="c1">복사</button></div>
   <h3>모든 프로젝트 (Windows PowerShell)</h3>

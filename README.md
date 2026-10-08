@@ -12,7 +12,16 @@ Ads are rarely one person writing one good sentence. A planner reframes the brie
 
 ## Quick start
 
-Clone it into a Claude Code skills folder. Keep the folder name `copy-masters`.
+Install it as a plugin, inside a Claude Code session:
+
+```
+/plugin marketplace add 5hyuns/ad-copy-agency-skill
+/plugin install copy-masters@ad-copy-agency-skill
+```
+
+Start a new session (or run `/reload-plugins`) and the skill is `/copy-masters:copy-masters`. Update with `/plugin marketplace update ad-copy-agency-skill`.
+
+If you would rather have the files in a skills folder, clone it instead. Keep the folder name `copy-masters`; then the skill is `/copy-masters` and you update with `git pull`.
 
 ```bash
 # all projects (macOS, Linux, Git Bash)
@@ -25,7 +34,7 @@ git clone https://github.com/5hyuns/ad-copy-agency-skill.git "$HOME\.claude\skil
 git clone https://github.com/5hyuns/ad-copy-agency-skill.git .claude/skills/copy-masters
 ```
 
-Start a new Claude Code session and call it. Add `카피 언어 (copy language): en` for English copy; the market then defaults to `us`. Field names are Korean; values can be in any language.
+Call it like this (plugin install: `/copy-masters:copy-masters`). Add `카피 언어 (copy language): en` for English copy; the market then defaults to `us`. Field names are Korean; values can be in any language.
 
 ```
 /copy-masters
@@ -42,7 +51,7 @@ Start a new Claude Code session and call it. Add `카피 언어 (copy language):
 
 You can also just ask for ad copy or headlines in plain words. If a required input is missing, it asks before starting.
 
-Requirements: Claude Code and Python 3 (the helper scripts use only the standard library). Raw material collection uses a web search tool when available and falls back to the material you provide. Update with `git pull` in the install folder.
+Requirements: Claude Code and Python 3 (the helper scripts use only the standard library). Raw material collection uses a web search tool when available and falls back to the material you provide.
 
 ## Inputs
 
